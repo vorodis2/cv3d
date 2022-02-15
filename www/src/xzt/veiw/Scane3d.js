@@ -37,9 +37,13 @@ export class Scane3d  {
             cube.position.set(s*Math.random()-s/2,s*Math.random()-s/2,s*Math.random()-s/2)
             cube.scale.set(0.1+Math.random(),0.1+Math.random(),0.1+Math.random())
             this.content3d.add( cube );  
-        }  
+        } 
 
+        ///trace(this.par.menu) 
 
+        this.par.visi3D.addEvent("down",function(e){          
+            trace('eeeee')
+        })
 
         var w,h,s;
         this.sizeWindow = function(_w,_h,_s){  
