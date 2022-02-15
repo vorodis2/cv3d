@@ -1,6 +1,6 @@
 
 import { XZ } from '../XZ.js';
-
+import { MozgClass } from './MozgClass.js';
 export class Mozg  {
   	constructor(par, fun) {  		
   		this.type="Mozg";
@@ -104,20 +104,23 @@ export class MZBlok {
         this.arrStrok=[];
         this.kolStrok=0;
 
-        this.inLine=new MZBTLine()
+        this.inLine=new MZBTLine(this,this.sob)
         this.openLoad=false
 
         this.arrayImport=[];
         this.arrayImportCech=[];
         this.arrImpBlok=[];
+
+        this.arrayClass=[];
+        this.objectClass={};
+
         this.clear=function(){
             this.arrayImport.length=0;
             this.arrImpBlok.length=0;
         } 
 
         var imp
-        this.craetImport=function(a,s){
-            
+        this.craetImport=function(a,s){             
             if(this.arrayImportCech[this.arrayImport.length]==undefined){
                 this.arrayImportCech[this.arrayImport.length]=new ImpHromn(this,this.sob)
                 this.arrayImportCech[this.arrayImport.length].idArr=this.arrayImport.length
@@ -127,12 +130,15 @@ export class MZBlok {
             imp.set(a,s)
         }
 
+
+
+
         this.sob=function(s,p){
 
         }
 
 
-        this.setJS=function(s){
+        this.setJS=function(s){           
             this.clear();
             this.link=s;
             this.openLoad=false
@@ -148,23 +154,33 @@ export class MZBlok {
             this.name=this.aLint[this.aLint.length-1]
             self.mzbText.set(data);
 
-             trace(this.idArr,this.link,this.aLint,this.arrayImport,this.aLint);   
+            trace(this.idArr,this.link,this.aLint,this.arrayImport,this.aLint);   
             this.openLoad=true;           
             this.fun("load",this)      
         }
 
+        this.sobClass=function(s,p){
+
+        }
+
         //Создание классов 
-        this.startClass=function(){   
-            var arr=self.mzbText.getClassLine()
-           // trace(arr)
+        this.startClass=function(){     
+            var arr=self.mzbText.getClassLine();            
+            for (var i = 0; i < arr.length; i++) {
+                if(this.objectClass[arr[i].name]==undefined){
+                    this.objectClass[arr[i].name]=new MozgClass(this,this.sobClass)
+                    this.objectClass[arr[i].name].name=arr[i].name
+                }
+                this.objectClass[arr[i].name].setLines(arr[i].o,arr[i].o1);
+            }
         }
 
 
         ///Пускаем дальше на поиск от
-        this.startImp=function(){            
-           // this.startClass(); 
-            //return
-            trace(">>>>>>>>>",this.arrayImport)
+        this.startImp=function(){  
+            self.mzbText.korImport()       
+            this.startClass();         
+            
             var aa,aa1;
             var sah=0;
             for (var i = 0; i < this.arrayImport.length; i++) {
@@ -190,8 +206,11 @@ export class MZBlok {
                     ss=s
                 }
                 if(ss=='') continue
-                if(ss.indexOf("shaders")!=-1)continue
-                this.arrayImport[i].blok = this.par.setJS(ss);
+                if(ss.indexOf("shaders")!=-1)continue;
+                //if(ss.indexOf("MHBDPHP")!=-1)continue    
+                trace(i,ss)
+                
+                this.arrayImport[i].blok = this.par.setJS(ss);                
                 this.arrImpBlok[sah] = this.arrayImport[i].blok;
                 sah++;
                 continue
@@ -232,7 +251,7 @@ export class MZBText  {
         var self=this;
         this.par=par;
         this.fun=fun;
-
+        this.arrSim=[" ","\t","\r","//","/*","*/",";","{","}"];
         this.array=[];
         this.arrayCeh=[];    
 
@@ -261,42 +280,146 @@ export class MZBText  {
             return line;
         }
 
+        ///cоздание импортов
+        this.korImport=function(){
+            var bb
+            for (var i = 0; i < this.array.length; i++) {
+                for (var j = 0; j < this.array[i].array.length; j++) {   
+                    bb=true;
+                    if(this.array[i].arrBo[j]!=0) 
+                    if(this.array[i].array[j]=="import"){                        
+                        var oo=this.getSkobki(i, 0, "{", "}")//ищем скобки 
+                        if(oo){
+                            var ac=[]//классы в импорте
+                            var dd=oo.o.sah
+                            if(oo.o.line!=oo.o1.line){//хз //FIXE Visi3d.js !!!rt MEffectArray from './MEffectArray.js';
+
+                                for (var k = 0; k < this.array[i].array.length; k++) {
+                                    if(this.array[i].array[k]=="from"){
+                                        var oo2=this.getPusto(i,j+1)                                    
+                                        ac.push(this.array[oo2.line].array[oo2.sah]);
+
+                                        var oo3=this.getPusto(i,k+1)  
+                                        var s=this.array[oo3.line].array[oo3.sah]
+                                        var asd=s.split("'")
+                                        var s1=s
+                                        if(asd.length===3)s1=asd[1]                                   
+                                        self.fun("craetImport",ac,s1)
+                                    
+                                        trace("~~~",oo2,ac,s)
+
+                                    }
+                                }   
+                                
+                                continue
+                                
+                                
+                            }
+
+
+                            for (var ii = oo.o.line; ii < oo.o1.line+1; ii++) {                                
+                                for (var jj = dd; jj < this.array[ii].array.length; jj++) {
+                                   
+                                    var b=true
+                                    for (var k = 0; k < this.arrSim.length; k++) {
+                                        if(this.arrSim[k]==this.array[ii].array[jj])b=false
+                                        if(this.array[ii].array[jj]=='')b=false
+                                    }
+
+                                    if(b){                                       
+                                        ac.push(this.array[ii].array[jj])
+                                    }
+
+
+                                    if(oo.o1.line==ii && oo.o1.sah==jj){
+                                        ii=999999999
+                                        jj=999999999
+                                        break
+                                    }
+                                }
+                                dd=0;
+                            }
+                            
+                            if(ac.length!=0){
+                                var ooo=this.getPusto(oo.o1.line,oo.o1.sah+1)
+                                if(ooo){
+                                    var ooo1=this.getPusto(ooo.line,ooo.sah+1)
+                                    var s=ooo1.bLine.array[ooo1.sah];
+                                    var asd=s.split("'")
+                                    var s1=s
+                                    if(asd.length===3)s1=asd[1]                                   
+                                    self.fun("craetImport",ac,s1)
+                           
+                                }
+                                
+                            }
+
+                        }                        
+                    }
+                }
+            }
+
+/*            if(this.status==1 && this.kontSah!=-1){                
+                if(this.array[this.kontSah].indexOf("import")!=-1){
+
+
+                    
+                    ss=this.array[this.kontSah]
+                    var aad=[ss]
+              
+                    this.parse(aad,["{","}"])
+
+                    if(aad.length==1){//глюк без скобок
+                        this.parse(aad,[" "]);
+                    }
+                    var o = this.
+
+          
+
+                    var aad1=[aad[2]];                   
+                    this.parse(aad1,[" ",","])
+                    var aad2=this.getPos(aad1,[" ",",",""],"vse")
+
+                    var aad11,aad111,aad22;
+                    aad11=ss.split("from")
+                    if(aad11[1]==undefined)return //Хроень в масивах))) var aa=["import { LocalStorage } from '../component/LocalStorageE6.js'!!!!
+                    aad111=[aad11[1]];
+                    
+                    this.parse(aad111,[" " ,"," ,"'", '"' ])
+                    aad22=this.getPos(aad111,[" ",",","","'", '"'],"vse")
+                    self.fun("craetImport",aad2,aad22[0])
+                }
+            }*/
+        }
+
+
 
         //Создание классов перебераем ищем классы
         this.getClassLine=function(){
-          //  trace("#############getClassLine##############")
+
             var arr=[];
             var sc
             for (var i = 0; i < this.array.length; i++) {
                 sc=this.array[i].getStartKlass()
                 
                 if(sc!=null){
-                  //  trace("####",sc.bLine.array[sc.sah],sc)
+
                     var oo=this.getPusto(sc.line,sc.sah+1)
 
-                 //   trace("#",oo.bLine.array[oo.sah],oo)
-                    //this.getCl2(i,sc)
-                    //trace("####",sc,"!!",oo)
+                    var oo1=this.getSkobki(sc.line, oo.sah, "{", "}")
+                 
+
+                    if(oo1!=null){
+                        oo1.name=sc.bLine.array[sc.sah]
+                        arr.push(oo1)
+                      
+                    }
                 }
             }
-           // trace("#########################")
+
             return arr;
         }
 
-        //от этой строки ищем символ
-        var o1
-        this.getCl2=function(ii,k){
-            var bb=false
-            var st=-1
-            for (var i = 0; i < this.array[ii].array.length; i++) {
-              //  trace(">>",this.array[ii].array[i],k+"!")                
-                if(this.array[ii].array[i].indexOf(k)!=-1){
-                  //  trace("------------")
-                    o1=this.getSimvol(ii,i+1,"{");
-                   // trace("-----",o1)
-                }               
-            }
-        }
 
 
         //>> строку и символ
@@ -320,8 +443,9 @@ export class MZBText  {
             return null
         }
 
+        ///находим что либо после кроме пустот
         this.arrPusto=[""," ","\t","\r"]
-        this.getPusto=function(ii,sah,simvol){
+        this.getPusto=function(ii,sah){
             let o={line:0,sah:0,bLine:null}
             o.line=-1;
             o.sah=-1;
@@ -348,6 +472,53 @@ export class MZBText  {
         }
 
 
+        ///Возврощает тело между [] {} ну или чо пошлеш null если не судьба
+        this.getSkobki=function(ii,sah,_ot,_do){
+            
+            let o={line:0,sah:0,bLine:null}
+            let o1={line:0,sah:0,bLine:null}
+            let ob={o:o,o1:o1,name:""};
+
+            o.line=-1;
+            o.sah=-1;
+            o1.line=-1;
+            o1.sah=-1;
+            
+            var sah=0;
+            var bb=false;
+            var s1=sah; 
+
+            for (var i = ii; i < this.array.length; i++) { 
+                for (var j = s1; j < this.array[i].array.length; j++) {   
+                    if(this.array[i].arrBo[j]!=0){
+                        if(this.array[i].array[j]==_ot){
+                            sah++ 
+                            if(bb==false){
+                                o.line=i
+                                o.sah=j
+                            }                       
+                            bb=true;
+                        }
+                        if(this.array[i].array[j]==_do){
+                            sah--;                        
+                            if(sah==0){
+
+                                o1.line=i
+                                o1.sah=j
+                                return ob
+                            }
+                        }
+                    }
+                }
+                s1=0;
+            }
+
+
+            return null
+        }
+
+
+
 
         this.text="";
         var lll
@@ -360,6 +531,8 @@ export class MZBText  {
                 lll=this.craet(a[i]);
                 lll.set(a[i]);
             }
+            
+            
         }
     }
 }
@@ -379,8 +552,8 @@ export class MZBTLine{
         this.array=[];
         this.arrBo=[];
         this.kontSah=-1;
-
-        this.arrSim=[" ","\t","\r","//","/*","*/",";","{","}",];
+        
+        this.arrSim=this.par.arrSim;
 
         this.arrImp=[];
 
@@ -410,12 +583,12 @@ export class MZBTLine{
 
 
             this.korStatuc()
-            this.korImport()
+         
 
             
            // trace(this.idArr,this.array,this.arrBo) 
            
-            //trace(this.idArr,s)  
+
                   
         }
 
@@ -456,33 +629,7 @@ export class MZBTLine{
             }
         }
 
-        this.korImport=function(){
-            if(this.status==1 && this.kontSah!=-1){
-                if(this.array[this.kontSah].indexOf("import ")!=-1){
-                    ss=this.array[this.kontSah]
-                    var aad=[ss]
 
-                    this.parse(aad,["{","}"])
-
-                    if(aad.length==1){//глюк без скобок
-                        this.parse(aad,[" "]);
-                    }                   
-
-                    var aad1=[aad[2]];                   
-                    this.parse(aad1,[" ",","])
-                    var aad2=this.getPos(aad1,[" ",",",""],"vse")
-
-                    var aad11,aad111,aad22;
-                    aad11=ss.split("from")
-                    if(aad11[1]==undefined)return //Хроень в масивах))) var aa=["import { LocalStorage } from '../component/LocalStorageE6.js'!!!!
-                    aad111=[aad11[1]];
-                    
-                    this.parse(aad111,[" " ,"," ,"'", '"' ])
-                    aad22=this.getPos(aad111,[" ",",","","'", '"'],"vse")
-                    self.fun("craetImport",aad2,aad22[0])
-                }
-            }
-        }
 
         this.getStartKlass=function(){
             if(this.text.indexOf("class")!=-1){
@@ -500,24 +647,6 @@ export class MZBTLine{
 
                     }
                 }
-/*
-                var a=this.text.split("class");
-                var aa=[a[1]]
-                
-                this.parse(aa,this.arrSim)//[" ","{"])
-
-                for (var i = 0; i < aa.length; i++) {
-                    var b=true;
-                    for (var i = 0; i < this.arrSim.length; i++) {
-
-                    }
-                }
-                if(aa[2]){
-                    trace(aa)
-                   // return aa[2];
-                }
-                //trace(this.array,aa)*/
-
             }
 
 

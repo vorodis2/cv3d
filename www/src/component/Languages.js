@@ -7,7 +7,7 @@ export class Languages  {
   		this.type="Languages";
   		var self=this;
 
-
+        
         this.a=array
 
         this._key=array[0].key

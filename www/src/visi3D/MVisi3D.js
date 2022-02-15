@@ -2,7 +2,7 @@
 import MEffectArray from './MEffectArray.js';
 import MPosition3d from './MPosition3d.js';
 import MEvent3DArr from './MEvent3DArr.js';
-import MUtility from './MUtility.js';/**/
+import MUtility from './MUtility.js';
 import CubeMap from './CubeMap.js';
 
 export function MVisi3D (_contentHTML, _content2d, _devas, _directional, _efect, _event3DArr, _alpha) {

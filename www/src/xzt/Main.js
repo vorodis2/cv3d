@@ -1,7 +1,10 @@
-import { Glaf } from './Glaf.js';
+import {Glaf } from './Glaf.js';
 import { Param } from '../component/Param.js';
 import { MHBDPHP } from '../component/MHBDPHP.js';
 import { Calc } from '../component/Calc.js';
+
+import { LocalStorage} from '../component/LocalStorageE6.js';
+import {Languages} from '../component/Languages.js';
 export class Main{
   	constructor(fun) {  		
   		this.type="Main";  		  		
@@ -57,6 +60,9 @@ export class Main{
   				self.glaf.sizeWindow(w, h, this.scale)
   			}			
   		}
+  		window.languages=new Languages([{key:"ru"},{key:"en"}])
+
+  		window.localS=new LocalStorage(function(){},"xzt_v1")
 
   		window.calc=new Calc()
   		this.param = new Param().param;

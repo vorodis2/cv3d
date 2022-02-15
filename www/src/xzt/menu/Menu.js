@@ -1,5 +1,7 @@
 
-import { XZ } from '../XZ.js';
+import { MVerh } from './MVerh.js';
+import { MBILink } from '../../component/ui/MBILink.js';
+import { MCPodskazka } from '../../component/ui/MCPodskazka.js';
 
 export class Menu  {
   	constructor(par, fun) {  		
@@ -11,15 +13,20 @@ export class Menu  {
 
         this.dCont=new DCont(par.dCont); 
         this.array=[]
-        
-        /*this.window=new DWindow(this.dCont,0,0,"dsgdsg");
-        new DButton(this.window.content,0,0,"test",function(){
-            trace("dfg",self.param);
-            self.fun("test");
-        });*/
 
 
         this.init = function(){  
+
+            window.mCPodskazka=this.array[5] =new MCPodskazka(this.dCont,function(s,p,p1){  
+
+
+            })
+
+
+            this.array[3]=this.mVerh=new MVerh(this,function(s,p){
+
+            })
+
 
             this.array[0]=this.mShtora=new MShtora(this,function(s,p){
 
@@ -31,9 +38,23 @@ export class Menu  {
 
             })
 
+            
+
+
             this.mFolders.setMSBlok(this.mShtora.array[0]);
 
             this.mVisi3d.setMSBlok(this.mShtora.array[1]);
+
+
+            this.dCont.add(this.mVerh.dCont)
+
+            window.mbILink= this.array[4] = new MBILink(this,function(s,p,p1){  
+
+
+            })
+
+            this.dCont.remove(mCPodskazka.dCont)
+            this.dCont.add(mCPodskazka.dCont)
         }
 
 
@@ -55,6 +76,8 @@ export class Menu  {
         this.init()
   	}
 }
+
+
 
 
 export class MVisi3d  {
@@ -107,31 +130,18 @@ export class MFolders  {
         this.dCont=new DCont(); 
 
         
-        this.input=new DInput(this.dCont,this.param.otstup,this.param.otstup,"../../src/xzt/Main.js",function(){
+       /* this.input=new DInput(this.dCont,this.param.otstup,this.param.otstup,"../../src/xzt/Main.js",function(){
 
         })
         this.button=new DButton(this.dCont,this.param.otstup,this.param.otstup,"start",function(){
             
             var b = self.par.par.mozg.setJSKoren(self.input.text)
-
-           /* var s='[{"ui":["SwitchPage.js"]'
-            trace("<<s<",s);     
-            var o=JSON.parse(s)
-            trace("<<s<",o);*/
-
-            /*mhbd.setPHP(
-                {tip:"getFiles1",dir:self.input.text},
-                function(data){ 
-                    trace("<<<",data);
-                    
-
-                    var o=JSON.parse(data)
-                    
-                    trace("<<s<",o);
-                }
-            )*/
         })
-        this.button.width=32
+        this.button.width=32*/
+
+        this.panel=new DPanel(this.dCont,this.param.otstup,this.param.otstup)
+        this.panel.height=32+this.param.otstup*2
+
 
         this.mozg=this.par.par.mozg
         this.openLoad=function(bool){            
@@ -139,7 +149,7 @@ export class MFolders  {
         }
 
         setTimeout(function() {
-            self.par.par.mozg.setJSKoren(self.input.text)
+            //self.par.par.mozg.setJSKoren(self.input.text)
         }, 10);
 
        
@@ -152,16 +162,17 @@ export class MFolders  {
         })  
 
 
-        this.setMOZBlok=function(mzBlok){                   
+        this.setMOZBlok=function(mzBlok){
+            trace( mzBlok.name,mzBlok.uuid, mzBlok.arrImpBlok)                     
             this.setMOd(mzBlok)
             this.threeImp.setObj(mzBlok,"arrImpBlok","name")
         }
 
         this.setMOd=function(mzBlok){
-            trace( mzBlok.name,mzBlok.uuid, mzBlok.arrImpBlok)   
-            for (var i = 0; i < mzBlok.arrImpBlok.length; i++) {
+             
+            /*for (var i = 0; i < mzBlok.arrImpBlok.length; i++) {
                 this.setMOd(mzBlok.arrImpBlok[i])
-            }
+            }*/
         }
 
 
@@ -181,13 +192,15 @@ export class MFolders  {
                 w= _w;
                 h= _h;               
             } 
-            self.button.width= w/4   
+
+            /*self.button.width= w/4   
             self.input.x=self.param.otstup
             self.input.y=self.param.otstup
             self.input.width=w-self.param.otstup*3-self.button.width
             self.button.y=self.param.otstup
             self.button.x=self.param.otstup*2+self.input.width
-
+*/
+            self.panel.width=w-self.param.otstup*2
             self.threeImp.width=w-self.param.otstup*2
             self.threeImp.height=h-self.threeImp.y-self.param.otstup
         }
