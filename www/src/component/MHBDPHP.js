@@ -44,6 +44,7 @@ export class MHBDPHP {
             if(self.objectBase.objects3d==undefined){self.objectBase.objects3d=[];self.saveTime()}            
             if(self.objectBase.textures==undefined){self.objectBase.textures=[];self.saveTime()}
             if(self.objectBase.scenes3d==undefined){self.objectBase.scenes3d=[];self.saveTime()}
+            if(self.objectBase.info==undefined){self.objectBase.info=[];self.saveTime()}
             //self.objectBase.scenes3d=[];
             if(self.objectBase.scenes3d[1]==undefined){
                 self.creat("scenes3d")
@@ -125,7 +126,7 @@ export class MHBDPHP {
         o.id=id+1;
         o.ru=key+"_"+o.id+"_ru";
         o.en=key+"_"+o.id+"_en";
-        o.name=key+"_"+o.id+"_ru";
+        o.name=key+"_"+o.id+"_name";
         o.sort=1;
         o.json={};
         o.icon= "not.png";
@@ -139,12 +140,14 @@ export class MHBDPHP {
         $.post(
             "src/component/MHBDPHP.php", 
             {tip:'mkdir', dir:"../../resources/date/"+key+"/"+o.id}, 
-            function(data){  }
+            function(data){ 
+                if(fun)fun(o);
+            }
         );
 
 
-        if(fun)fun(o);
-        return o
+        
+        return o;
     } 
 
 
@@ -380,7 +383,7 @@ export class MHBDPHP {
     this.getKeyId=function(key,id,fun, bool){       
         for (var i = 0; i < self.objectBase[key].length; i++) {
             if(self.objectBase[key][i].id==id){
-                console.warn("~~~~~",self.objectBase[key][i])
+          
                 if(fun)fun(self.objectBase[key][i])
                 return self.objectBase[key][i]
             }

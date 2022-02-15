@@ -16,50 +16,49 @@ export class MShtora  {
 
 
         this.plus=function(type, key, id, widthProsent){
-            this.array.push(new MSBlok(this,this.sob));
+            this.array.push(new MSBlok(this,this.sob,type, key, id, widthProsent)); 
+            this.array[this.array.length-1].active=true
             this.array[this.array.length-1].idArr=this.array[this.array.length-1];
         }
 
-        this.plus("xz","key",1, 0.2);    
-        this.plus("xz","key",1, 0.6);   
-        this.plus("xz","key",1, 0.2);
+        this.plus("xz","key",1, 200);   //дерево 
+       // this.plus("xz","key",1, 200);   //код 
+        this.plus("din","key",1);       //3д 
+        this.plus("static","key",1, 300)   //интерфейс
 
+        //for (var i = 0; i < this.array.length-1; i++) {  //делаю прозрачными кнопки
+            //this.array[i].button.alpha=0.5
+            //this.array[i].button.boolFond=false
+        //}
 
-        
-        this.array[0].prosentW=0.2;        
-        this.array[1].prosentW=0.6;
-        this.array[2].prosentW=0.2;
-        
-
-
-        
+        //this.array[this.array.length-1].button.visible=false  //делаю нивидимой последнюю кнопку-полосу
 
 
         this.draw=function(idBlok){
-            if(w==undefined)return
-            var www=w/s
-            var ss=1/this.array.length
-            this.array[0].prosent=0;
-            this.array[0].prosent1=this.array[0].prosentW;
 
-            for (var i = 1; i < this.array.length; i++) {
-                this.array[i].prosent=this.array[i-1].prosent1;
-                this.array[i].prosent1=this.array[i].prosent+this.array[i].prosentW;
-                for (var j = 1; j < this.array.length; j++) {
-                    if (j!==i) {
-                        var s=(1-this.array[i-1].prosent)/(this.array.length-1)                        
-                        this.array[j].prosent=this.array[j-1].prosent1;
-                        this.array[j].prosent1=this.array[j].prosent+this.array[j].prosentW*s+ss;
+            var ww=w/s-this.param.otstup;
+            for (var i = 0; i < this.array.length; i++) {
+                if(this.array[i].active==true){
+                    ww-=this.param.otstup;
+                    if(this.array[i].tipe=="xz" || this.array[i].tipe=="static"){
+                        ww-=this.array[i].width;
+                    }
+                }
+            }
+            for (var i = 0; i < this.array.length; i++) {
+                if(this.array[i].active==true){
+                    if(this.array[i].tipe=="din"){
+                        this.array[i].width=ww
                     }
                 }
             }
 
-            this.array[this.array.length-1].prosent=1-this.array[this.array.length-1].prosentW*s+ss;
-            this.array[this.array.length-1].prosent1=1;
 
+            var xx=this.param.otstup;
             for (var i = 0; i < this.array.length; i++) {
-                this.array[i].draw()
-            }  
+                this.array[i].x=xx;
+                xx+=this.array[i].width+this.param.otstup;
+            }
         }
 
         
@@ -81,26 +80,41 @@ export class MShtora  {
 }
 
 export class MSBlok  {
-    constructor(par, fun) {         
+    constructor(par, fun, tipe, key, id, widthProsent) {         
         this.type="MShtora";
         var self=this;
         this.par=par;
         this.fun=fun;
         this.param=this.par.param;
 
-        this.dCont=new DCont(par.dCont); 
+        this.tipe=tipe
+        this.key=key
+        this.id=id
+        this.widthProsent=widthProsent
+
+        this._x=0;
+        
+        this._width=200;
+        if(tipe=="static")
+            this._width=widthProsent;
+        this._active=false;
+
+        this.dCont=new DCont(); 
 
         this.dCont.y=30+this.param.otstup*4
-        this.prosentW =0.2 
+        
 
-        this.prosent=0;
-        this.prosent1=1;
+       
 
-        this.panel=new DPanel(this.dCont,0,0);
-        this.content=new DCont(this.dCont); 
+        this.panel=new DPanel(this.dCont,this.param.otstup,0);
+        this.content=new DCont(this.dCont);
+        this.button=new DButton(this.dCont,this._width,0);
+        this.button.width=this.param.otstup*2
 
-        this.button=new DButton(this.dCont,0,0);
-
+        this.chek=new DCheckBox(this.dCont,20,200,"test",function(){
+            self.active = this.value
+            self.par.draw()
+        })
 
         var xxx=0
         var x, x1
@@ -111,7 +125,7 @@ export class MSBlok  {
                 if(sp==undefined){
                     sp={                    
                         x:e.clientX,
-                        prosent:self.prosent,
+                        width:self.width,
                         prosent1:self.prosent1,
                         prosentW:self.prosentW 
                     };
@@ -121,7 +135,7 @@ export class MSBlok  {
                 if(sp==undefined){
                     sp={                    
                         x:e.targetTouches[0].clientX,
-                        prosent:self.prosent,
+                        width:self.width,
                         prosent1:self.prosent1,
                         prosentW:self.prosentW 
                     };
@@ -129,9 +143,7 @@ export class MSBlok  {
                 sp.xs=e.targetTouches[0].clientX
             }
             sp.xxx=(sp.x-sp.xs); 
-
-
-            self.drag()
+            self.drag();
         }
 
         this.mouseup = function(){
@@ -142,11 +154,10 @@ export class MSBlok  {
         this.button.fun_mousedown = function(){
             dcmParam.addFunMove(self.mousemove)
             window.addEventListener("mouseup", self.mouseup);
-            trace('fun_mousedown')
+           
         };
 
-        this.button.fun_mouseover = function(){
-            trace('fun_mouseover')
+        this.button.fun_mouseover = function(){          
             self.button.panel1.div.style.cursor = 'ew-resize';
         };
 
@@ -155,19 +166,24 @@ export class MSBlok  {
 
         this.drag=function(){
 
-            var pp=sp.prosentW-sp.xxx/(w)
-            this.prosentW=pp
+            var pp=sp.width-sp.xxx
+            this.width=pp
 
             this.par.draw(this.idArr)
         }
 
         this.draw=function(){
+            var xx=this.param.otstup
             this.panel.height=h/s-this.dCont.y-this.param.otstup
-            this.panel.width=w/s*(this.prosent1-this.prosent)
-            this.dCont.x=w/s*this.prosent;
+            this.panel.width=this._width;
+            this.button.x=this._width;   
+
+        
 
             this.button.height=this.panel.height
-            this.button.x=this.panel.width-this.param.otstup
+
+            
+            
 
 
             if(this.sizeWin)this.sizeWin(this.panel.width,this.panel.height)
@@ -184,5 +200,41 @@ export class MSBlok  {
             }  
             this.draw()
         }  
+    }
+
+    set active(value) {
+        if (this._active != value) {
+            this._active = value;
+            if(this._active==true){
+                this.par.dCont.add(this.dCont)
+            }else{
+                this.par.dCont.remove(this.dCont)
+            }
+
+            this.draw()    
+        }
+    }
+    get active() {
+        return this._active;
+    }
+
+    set width(value) {
+        if (this._width != value) {
+            this._width = value; 
+            this.draw()    
+        }
+    }
+    get width() {
+        return this._width;
+    }
+
+    set x(value) {
+        if (this._x != value) {
+            this._x = value; 
+            this.dCont.x =this._x;         
+        }
+    }
+    get x() {
+        return this._x;
     }
 }
