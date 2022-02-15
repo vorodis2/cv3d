@@ -383,7 +383,7 @@ export class MHBDPHP {
     this.getKeyId=function(key,id,fun, bool){       
         for (var i = 0; i < self.objectBase[key].length; i++) {
             if(self.objectBase[key][i].id==id){
-                console.warn("~~~~~",self.objectBase[key][i])
+          
                 if(fun)fun(self.objectBase[key][i])
                 return self.objectBase[key][i]
             }
