@@ -40,11 +40,17 @@ export class Menu  {
             })
 
             
-
+            this.mVerh.setMShtora(this.mShtora)
 
             this.mFolders.setMSBlok(this.mShtora.array[0]);
 
-            this.mVisi3d.setMSBlok(this.mShtora.array[1]);
+            for (var i = 0; i < this.mShtora.array.length; i++) {
+                if(this.mShtora.array[i].tipe=="din"){
+                    this.mVisi3d.setMSBlok(this.mShtora.array[i]);
+                    break
+                }
+            }    
+            
 
 
             this.dCont.add(this.mVerh.dCont)

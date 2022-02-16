@@ -6,8 +6,15 @@ export class MShtora  {
         this.fun=fun;
         this.param=this.par.param;
 
-        this.dCont=new DCont(par.dCont); 
+        this.dCont=new DCont(par.dCont);
 
+        this.dCont1=new DCont(par.dCont);
+        this.panel=new DPanel(this.dCont1)
+
+        //this.dCont1.y=100;
+        this.dCont1.x=this.param.otstup;
+
+        this.panel.height=32+this.param.otstup
         this.array=[]
 
         this.sob=function(s,p){
@@ -15,28 +22,39 @@ export class MShtora  {
         }
 
 
-        this.plus=function(type, key, id, widthProsent){
+        this.plus=function(type, key, id, widthProsent){            
             this.array.push(new MSBlok(this,this.sob,type, key, id, widthProsent)); 
             this.array[this.array.length-1].active=true
-            this.array[this.array.length-1].idArr=this.array[this.array.length-1];
+            this.array[this.array.length-1].idArr=this.array.length-1;
+            var x=this.param.otstup;
+           
+            for (var i = 0; i < this.array.length; i++) {
+                if(this.array[i].button1!=undefined){
+                    this.array[i].button1.x=x;
+                    x+=this.param.otstup+this.array[i].button1.width                    
+                }
+                this.array[i].button.visible=true                
+            }
+           
+
+            this.panel.width=x
         }
 
-        this.plus("xz","key",1, 200);   //дерево 
-       // this.plus("xz","key",1, 200);   //код 
-        this.plus("din","key",1);       //3д 
-        this.plus("static","key",1, 300)   //интерфейс
-
-        //for (var i = 0; i < this.array.length-1; i++) {  //делаю прозрачными кнопки
-            //this.array[i].button.alpha=0.5
-            //this.array[i].button.boolFond=false
-        //}
-
-        //this.array[this.array.length-1].button.visible=false  //делаю нивидимой последнюю кнопку-полосу
+        this.plus("xz","info",18, 200);   //дерево         
+        this.plus("din","info",19,);         //3д 
+        this.plus("static","info",20, 300)   //интерфейс
 
 
-        this.draw=function(idBlok){
+        this.draw=function(){
 
             var ww=w/s-this.param.otstup;
+
+            for (var i = 0; i < this.array.length; i++) {
+                if(this.array[i].active==true){                 
+                    this.array[i].button.visible=true;
+                }
+            }
+
             for (var i = 0; i < this.array.length; i++) {
                 if(this.array[i].active==true){
                     ww-=this.param.otstup;
@@ -45,22 +63,60 @@ export class MShtora  {
                     }
                 }
             }
+
             for (var i = 0; i < this.array.length; i++) {
                 if(this.array[i].active==true){
                     if(this.array[i].tipe=="din"){
                         this.array[i].width=ww
+                        this.array[i].button.visible=false;
+                    }
+                    if(this.array[i].tipe=="static"){
+                        this.array[i].button.visible=false;
                     }
                 }
-            }
 
+             }
 
             var xx=this.param.otstup;
             for (var i = 0; i < this.array.length; i++) {
-                this.array[i].x=xx;
-                xx+=this.array[i].width+this.param.otstup;
+                if(this.array[i].active==true){
+                    this.array[i].x=xx;
+                    xx+=this.array[i].width+this.param.otstup;
+                    
+                }
+            }
+
+            for (var i = this.array.length - 1; i >= 0; i--) {
+                if(this.array[i].active==true){
+                    this.array[i].button.visible=false;
+                    break
+                }
             }
         }
 
+        this.getMin = function(idArr, pp){
+            
+            var pp1=pp
+          
+            var xx=this.array[idArr].x
+            var ww=this.param.otstup
+            for (var i = idArr+1; i < this.array.length; i++) {                
+                if(this.array[i].active==true){                    
+                    if(this.array[i].tipe=="din"||this.array[i].tipe=="static" ){
+                        ww+=this.array[i].min+this.param.otstup;
+                    } 
+                    if(this.array[i].tipe=="xz" ){
+                        ww+=this.array[i].width+this.param.otstup;
+                    }                    
+                }
+            }
+            var ppo=w/s-ww-xx
+
+            if(pp1>ppo)pp1=ppo
+           // trace(w,ppo,"",xx,pp)
+
+            return pp1
+        }
         
 
         var w,h,s;
@@ -90,44 +146,71 @@ export class MSBlok  {
         this.tipe=tipe
         this.key=key
         this.id=id
+      
         this.widthProsent=widthProsent
 
         this._x=0;
-        
+        this.min=100
         this._width=200;
-        if(tipe=="static")
+        if(tipe=="static"){            
             this._width=widthProsent;
+            this.min=this._width
+        }
         this._active=false;
 
         this.dCont=new DCont(); 
 
+        
         this.dCont.y=30+this.param.otstup*4
+        trace(this.dCont)
         
 
-       
 
-        this.panel=new DPanel(this.dCont,this.param.otstup,0);
+        this.panel=new DPanel(this.dCont,0,0);
+       // if(tipe=="static"){ 
+            //this.panel.color="#333333"//+Math.round(Math.random()*9999)
+       // }
+
         this.content=new DCont(this.dCont);
-        this.button=new DButton(this.dCont,this._width,0);
-        this.button.width=this.param.otstup*2
+        this.button=new DButton(this.dCont,0,0);
+     
+        this.button.width=this.param.otstup
+        // this.button=new DButton(this.dCont,this._width+this.param.otstup,0);
+        // this.button.width=this.param.otstup
 
-        this.chek=new DCheckBox(this.dCont,20,200,"test",function(){
-            self.active = this.value
-            self.par.draw()
-        })
+        if(key!=undefined){
+            this.button1=new DButton(this.par.dCont1,0,this.param.otstup,this.id,function(){
+                self.active = !self.active
+                self.par.draw()
+            });
+            this.button1.width=this.button1.height=32
+            this.button1.scalePic=1;
 
-        var xxx=0
-        var x, x1
+            mhbd.getKeyId(key,id,function(e){
+                trace(e)
+                self.button1.link=mhbd.getLink(e.icon);
+                mCPodskazka.setBuuton(self.button1,e)
+                //languages.setCompObj(self.arrComp[13],e)
+            })
+        }
+
+        // this.chek=new DCheckBox(this.dCont,20,200,"test",function(){
+        //     self.active = this.value
+        //     self.par.draw()
+        // })
+
+        //var xxx=0
+        //var x
         var sp=undefined;
 
         this.mousemove=function(e){
+
             if(dcmParam.mobile==false){
                 if(sp==undefined){
                     sp={                    
                         x:e.clientX,
                         width:self.width,
-                        prosent1:self.prosent1,
-                        prosentW:self.prosentW 
+                        x1:self.x
                     };
                 }  
                 sp.xs=e.clientX         
@@ -136,8 +219,7 @@ export class MSBlok  {
                     sp={                    
                         x:e.targetTouches[0].clientX,
                         width:self.width,
-                        prosent1:self.prosent1,
-                        prosentW:self.prosentW 
+                        x1:self.x
                     };
                 }
                 sp.xs=e.targetTouches[0].clientX
@@ -149,6 +231,7 @@ export class MSBlok  {
         this.mouseup = function(){
             window.removeEventListener("mouseup", self.mouseup);
             dcmParam.removeFunMove(self.mousemove) 
+            sp=undefined;
         }
 
         this.button.fun_mousedown = function(){
@@ -166,10 +249,22 @@ export class MSBlok  {
 
         this.drag=function(){
 
-            var pp=sp.width-sp.xxx
-            this.width=pp
+            if(tipe=="static"){
+                this.x=sp.x-sp.xxx
 
-            this.par.draw(this.idArr)
+                trace(this.x,sp)
+                this.par.draw()
+                return
+            }
+           
+            var pp=sp.width-sp.xxx
+            //if (this.tipe=='xz') {
+                pp<this.min ? pp=this.min : pp=pp;
+            //}
+            var pp1=this.par.getMin(this.idArr,pp)
+
+            this.width=pp1;
+            this.par.draw()
         }
 
         this.draw=function(){
@@ -178,13 +273,7 @@ export class MSBlok  {
             this.panel.width=this._width;
             this.button.x=this._width;   
 
-        
-
             this.button.height=this.panel.height
-
-            
-            
-
 
             if(this.sizeWin)this.sizeWin(this.panel.width,this.panel.height)
 
@@ -202,12 +291,14 @@ export class MSBlok  {
         }  
     }
 
-    set active(value) {
+    set active(value) {       
         if (this._active != value) {
             this._active = value;
             if(this._active==true){
+                if(this.button1)this.button1.color=dcmParam.colorActive
                 this.par.dCont.add(this.dCont)
             }else{
+                if(this.button1)this.button1.color=dcmParam.color
                 this.par.dCont.remove(this.dCont)
             }
 
@@ -221,6 +312,9 @@ export class MSBlok  {
     set width(value) {
         if (this._width != value) {
             this._width = value; 
+            if(this._width<this.min){
+                this._width=this.min
+            }
             this.draw()    
         }
     }
