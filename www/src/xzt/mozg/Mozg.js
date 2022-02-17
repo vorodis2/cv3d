@@ -1,6 +1,8 @@
 
 import { XZ } from '../XZ.js';
 import { MozgClass } from './MozgClass.js';
+import { AvtoObnova } from './AvtoObnova.js';
+
 export class Mozg  {
   	constructor(par, fun) {  		
   		this.type="Mozg";
@@ -12,7 +14,7 @@ export class Mozg  {
         this.array=[];
 
         this.openLoad=false
-
+        this.klass
         this.clear=function(s){
             for (var i = 0; i < this.array.length; i++) {
                 this.array[i].life=false
@@ -20,7 +22,6 @@ export class Mozg  {
         }
 
         this.sob=function(s,p){
-
             if(s=="load"){
                 p.startImp()
                 var b=true;
@@ -35,12 +36,17 @@ export class Mozg  {
                 }
                 
                 if(b){                    
-                    self.openLoad=true;
-                    self.fun("openLoad", true); 
-                }
-                
-                return;
+                    
 
+                    //Стартуем первый класс
+                    var a= self.kBlok.name.split(".");
+                    self.klass=self.kBlok.startClass(a[0])
+
+                    self.openLoad=true;
+                    self.fun("openLoad", true);
+
+                }                
+                return;
             }
         }    
 
@@ -88,9 +94,17 @@ export class MZBlok {
         this.par=par;
         this.fun=fun;
         this.uuid=calc.generateUUID(2)
-        this.life=false;
+        this._life=false;
 
         this.name="";
+        this.avtoObnova=new AvtoObnova(this,function(s,p,p1){
+            if(s=="upLoad"){
+                /*
+                this.life=false;
+                 self.upLoad() */
+            }
+        });
+
 
         this.mzbText=new MZBText(this,function(s,p,p1){
             if(s=="craetImport"){
@@ -138,11 +152,18 @@ export class MZBlok {
         }
 
 
-        this.setJS=function(s){           
+        this.setJS=function(s){  
+            trace(s)         
             this.clear();
+            self.avtoObnova.life=false
             this.link=s;
-            this.openLoad=false
-            mhbd.setPHP({tip:"getText",dir:s},  function(data){                 
+            this.openLoad=false;
+            this.upLoad()    
+        }
+
+        this.upLoad  =function(){   
+            mhbd.setPHP({tip:"getText",dir:this.link},  function(data){                 
+                //self.avtoObnova.start();
                 self.text=data; 
                 self.parsing(data);                             
             })
@@ -154,9 +175,9 @@ export class MZBlok {
             this.name=this.aLint[this.aLint.length-1]
             self.mzbText.set(data);
 
-            trace(this.idArr,this.link,this.aLint,this.arrayImport,this.aLint);   
+          
             this.openLoad=true;           
-            this.fun("load",this)      
+            this.fun("load",this);      
         }
 
         this.sobClass=function(s,p){
@@ -164,23 +185,38 @@ export class MZBlok {
         }
 
         //Создание классов 
-        this.startClass=function(){     
-            var arr=self.mzbText.getClassLine();            
+        this.creatClass=function(){     
+            var arr=self.mzbText.getClassLine();
+          
+            for (var s in this.objectClass) {
+                this.objectClass[s].clear()
+            }
+
             for (var i = 0; i < arr.length; i++) {
                 if(this.objectClass[arr[i].name]==undefined){
                     this.objectClass[arr[i].name]=new MozgClass(this,this.sobClass)
                     this.objectClass[arr[i].name].name=arr[i].name
                 }
-                this.objectClass[arr[i].name].setLines(arr[i].o,arr[i].o1);
-            }
+                this.objectClass[arr[i].name].setLines(arr[i]);                
+            }            
         }
+
+
+
+        this.startClass=function(str){ 
+            if(this.objectClass[str]){
+                this.objectClass[str].start();
+                return this.objectClass[str];
+            }
+            return null;           
+        }    
 
 
         ///Пускаем дальше на поиск от
         this.startImp=function(){  
             self.mzbText.korImport()       
-            this.startClass();         
-            
+            this.creatClass();         
+            //return
             var aa,aa1;
             var sah=0;
             for (var i = 0; i < this.arrayImport.length; i++) {
@@ -207,17 +243,27 @@ export class MZBlok {
                 }
                 if(ss=='') continue
                 if(ss.indexOf("shaders")!=-1)continue;
-                //if(ss.indexOf("MHBDPHP")!=-1)continue    
-                trace(i,ss)
                 
-                this.arrayImport[i].blok = this.par.setJS(ss);                
+                
+                this.arrayImport[i].blok = this.par.setJS(ss); 
                 this.arrImpBlok[sah] = this.arrayImport[i].blok;
+
+              
                 sah++;
                 continue
                
             }            
         }
     }
+    set life(value) {
+        if(this._life!=value){
+            this._life= value;            
+            if(this._life==false){
+                this.avtoObnova.life=false
+            }              
+        }
+    }    
+    get life() { return  this._life;} 
 }
 
 
@@ -306,7 +352,7 @@ export class MZBText  {
                                         if(asd.length===3)s1=asd[1]                                   
                                         self.fun("craetImport",ac,s1)
                                     
-                                        trace("~~~",oo2,ac,s)
+                          
 
                                     }
                                 }   
@@ -398,34 +444,93 @@ export class MZBText  {
         this.getClassLine=function(){
 
             var arr=[];
-            var sc
+            var sc;
             for (var i = 0; i < this.array.length; i++) {
-                sc=this.array[i].getStartKlass()
-                
+                sc=this.array[i].getStartKlass()                
                 if(sc!=null){
-
                     var oo=this.getPusto(sc.line,sc.sah+1)
-
-                    var oo1=this.getSkobki(sc.line, oo.sah, "{", "}")
-                 
-
+                    var oo1=this.getSkobki(sc.line, oo.sah, "{", "}") 
                     if(oo1!=null){
                         oo1.name=sc.bLine.array[sc.sah]
-                        arr.push(oo1)
-                      
+                        oo1.type=0;
+                        arr.push(oo1)                      
                     }
                 }
             }
+
+            //поиск старых типов
+            var l=0;
+            var s=0;
+            var ss;
+            var arr1=[];
+            for (var i = 0; i < 999999; i++) {
+                let lh=new LH(l,s)                
+                let oo1=this.getSkobki(lh.line, lh.sah, "{", "}") 
+                //trace("!!",l,s)
+                if(oo1!=null){
+                   // trace(">>>>>>>>>>>>>>>>",oo1,oo1.o1.bLine.array,oo1.o1.bLine.arrBo,oo1.o1.bLine.arrBo1,oo1.o1.bLine.arrBo0,oo1.o1);
+
+
+                    l=oo1.o1.line;
+                    s=oo1.o1.sah+1;
+
+            
+
+                    ss=this.array[oo1.o1.line].array[oo1.o1.sah];
+                    arr1.push(oo1); 
+                    
+                               
+                   
+                    if(this.array[oo1.o.line].text.indexOf("function")!=-1){
+                        if(this.array[oo1.o.line].text.indexOf("export")!=-1){
+                            var p=this.array[oo1.o.line].getPos(this.array[oo1.o.line].array, ["function"],false)
+                            var oo=this.getPusto(oo1.o.line,p+1)
+                            var ss=oo.bLine.array[oo.sah]
+                            oo1.type=1;//старый тип данных
+                            oo1.name=ss;
+                            arr.push(oo1);                           
+                        }
+                    }
+                    if(this.array[oo1.o.line].text.indexOf("function")!=-1){
+
+                    }
+
+                } else{
+                    break;
+                }
+                          
+            } 
+
+
+            for (var i = 0; i < arr1.length; i++) {//prototype                
+                if(arr1[i].type==undefined){
+                    if(this.array[arr1[i].o.line].text.indexOf("prototype")!=-1){
+                        var ss=this.array[arr1[i].o.line].text                        
+                        var a=ss.split("prototype")[0].split(".")[0] 
+                        for (var j = 0; j < arr1.length; j++) {
+                            if(arr1[j].type!==undefined){
+                                if(arr1[j].name==a){
+                                    arr1[j].prot=arr1[i];
+                                }
+                            }
+                        }                        
+                    }
+                } 
+            }            
+            
+
+            
+          
 
             return arr;
         }
 
 
 
-        //>> строку и символ
-        
+        //>> строку и символ        
         this.getSimvol=function(ii,sah,simvol){
-            let o={line:0,sah:0,bLine:null}
+            //let o={line:0,sah:0,bLine:null}
+            let o=new LH(0,0)
             o.line=-1;
             o.sah=-1;
             var s1=sah;            
@@ -446,7 +551,8 @@ export class MZBText  {
         ///находим что либо после кроме пустот
         this.arrPusto=[""," ","\t","\r"]
         this.getPusto=function(ii,sah){
-            let o={line:0,sah:0,bLine:null}
+            //let o={line:0,sah:0,bLine:null}
+            let o=new LH(0,0)
             o.line=-1;
             o.sah=-1;
             var b
@@ -475,43 +581,59 @@ export class MZBText  {
         ///Возврощает тело между [] {} ну или чо пошлеш null если не судьба
         this.getSkobki=function(ii,sah,_ot,_do){
             
-            let o={line:0,sah:0,bLine:null}
-            let o1={line:0,sah:0,bLine:null}
-            let ob={o:o,o1:o1,name:""};
+            let o=new LH()//{line:0,sah:0,bLine:null}
+            let o1=new LH()//{line:0,sah:0,bLine:null}
+            //let ob={o:o,o1:o1,name:""};
+            let ob =new LHInfo(o,o1)
 
             o.line=-1;
             o.sah=-1;
             o1.line=-1;
             o1.sah=-1;
-            
+            o.kol=0
+
+            var s1=sah; 
             var sah=0;
             var bb=false;
-            var s1=sah; 
-
+            
+            
             for (var i = ii; i < this.array.length; i++) { 
                 for (var j = s1; j < this.array[i].array.length; j++) {   
+                    
                     if(this.array[i].arrBo[j]!=0){
                         if(this.array[i].array[j]==_ot){
                             sah++ 
                             if(bb==false){
                                 o.line=i
                                 o.sah=j
-                            }                       
+                                o.bLine=this.array[i]
+                            }                             
+                            if(o.kol<sah)o.kol=sah; 
+                                           
                             bb=true;
                         }
                         if(this.array[i].array[j]==_do){
                             sah--;                        
                             if(sah==0){
-
                                 o1.line=i
                                 o1.sah=j
-                                return ob
+                                o1.bLine=this.array[i]
+                                i=9999999;
+                                j=9999999;
+                                
+                                break
                             }
+                            
                         }
                     }
+
                 }
                 s1=0;
             }
+            if(o1.line!=-1){
+                return ob
+            }
+            
 
 
             return null
@@ -530,6 +652,7 @@ export class MZBText  {
             for (var i = 0; i < a.length; i++) {                
                 lll=this.craet(a[i]);
                 lll.set(a[i]);
+
             }
             
             
@@ -537,6 +660,34 @@ export class MZBText  {
     }
 }
 
+
+export class LH{
+    constructor(line,sah,bLine) { 
+        this.line=line;
+        this.sah=sah;
+        this.bLine=bLine;
+        if(this.line==undefined)this.line=-1;
+        if(this.sah==undefined)this.sah=-1;
+
+        this.set=function(line,sah,bLine){
+            this.line=line;
+            this.sah=sah;
+            this.bLine=bLine;
+        }
+    }
+}
+
+export class LHInfo{
+    constructor(o,o1) { 
+        this.o=undefined;
+        this.o1=undefined;
+        this.name=undefined
+        this.type=undefined
+      
+        if(o!=undefined) this.o= o 
+        if(o1!=undefined) this.o1= o1       
+    }
+}
 
 
 
@@ -585,24 +736,28 @@ export class MZBTLine{
             this.korStatuc()
          
 
-            
-           // trace(this.idArr,this.array,this.arrBo) 
+
            
 
                   
         }
 
+        this.arrBo1=[]
+        this.arrBo0=[]
         var bb
         this.korStatuc=function(){
             this.arrBo.length=0;
+            this.arrBo1.length=0;
+            this.arrBo0.length=0;
             this.status=1;
             
             for (var i = 0; i < this.array.length; i++) {
                 this.arrBo[i]=this.par.boolCom;
+                this.arrBo1[i]=1;
             }
 
             //Коментарий через слешы
-            n=this.getPos(this.array,["//"],false);
+           /* n=this.getPos(this.array,["//"],false);
             if(n!=-1){
                 for (var i = 0; i < this.array.length; i++) {
                     if(i>=n){
@@ -611,7 +766,9 @@ export class MZBTLine{
                         if(n<this.kontSah)this.status=2;
                     }
                 }
-            }
+            }*/
+            
+
 
 
 
@@ -627,6 +784,18 @@ export class MZBTLine{
                     this.par.boolCom=1;
                 }
             }
+
+            var b=1
+            for (var i = 0; i < this.array.length; i++) {
+                if(this.arrBo[i]==1){
+                    if(this.array[i]=="//"){
+                        b=0;
+                        this.status=2;
+                    }
+                } 
+                if(b==0 && this.arrBo[i]==1)this.arrBo[i]=b;                
+            }
+
         }
 
 
@@ -636,6 +805,7 @@ export class MZBTLine{
               
                 var oo
                 for (var i = 0; i < this.array.length; i++) {
+                    if(this.arrBo[1]!=0)
                     if(this.array[i].indexOf("class")!=-1){                        
                         oo=this.par.getPusto(this.idArr,i+1)
                         

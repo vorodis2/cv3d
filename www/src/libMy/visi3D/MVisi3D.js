@@ -425,7 +425,8 @@ MVisi3D.prototype = {
 		this._zume = v;
 		this.ggCam.position.z = -v;
 		this.camera.position.z = 0;
-		this.intRend = 1;
+		this.intRend = 1;		
+		if(this.fun_rotationZ)this.fun_rotationZ()
 		
 	},
 	get zume () {

@@ -5,7 +5,7 @@
 export class ManagerURL  {
   	constructor(par,fun) {   		
   		this.type="ManagerURL";
-  	     var self=this;
+  	    var self=this;
         this.par=par;
         this.fun=fun;
         this.param=par.param;
@@ -13,21 +13,30 @@ export class ManagerURL  {
 
 
         this.set=function(separator){
+
             var args = Array.prototype.slice.call(arguments, 0);
             var s="";
                                   
             for (var i = 0; i < args.length; i++) {
                 s+=args[i]+"/";
             }
+            var ss=""
+
             if(window.document.URL.toString().indexOf('localhost')!=-1){
                 var a=window.document.URL.toString().split("?")
-                window.history.pushState("object or string", "Title", a[0]+"?"+s);
+                ss=a[0]+"?"+s                
             }
 
             if(window.document.URL.toString().indexOf('larvij.design/admin/')!=-1){
                 var a=window.document.URL.toString().split("larvij.design/admin/")
-                window.history.pushState("object or string", "Title", a[0]+"larvij.design/admin/?"+s);
-            } 
+                ss=a[0]+"larvij.design/admin/?"+s                
+            }  
+                         
+            document.title = s; 
+
+            window.history.pushState("object or string", "Title", ss);
+
+
         }
 
 

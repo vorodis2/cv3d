@@ -8,7 +8,7 @@ import PMIz from './PMIz.js';
 import PMTexture from './PMTexture.js';
 import Dop from './Dop.js';
 
-export function PM(visi3D, objbase,_param) { 	
+export function PM(visi3D, objbase, _param) { 	
 	this.type="PM";
 	var self=this;
     this.objbase=objbase;

@@ -3,6 +3,7 @@
 
 
 import { MVisi3D } from '../libMy/visi3D/MVisi3D.js';
+import { PM } from '../pm/PM.js';
 
 import { Scane3d } from './veiw/Scane3d.js';
 import { Menu } from './menu/Menu.js';
@@ -37,16 +38,18 @@ export class Glaf  {
 	 	this.visi3D.yes3d = true;       	
 		this.visi3D.groupObject.add(this.content3d);
         window.visi3D=this.visi3D
-        this.visi3D.rotationX=1.63;
+        /*this.visi3D.rotationX=1.63;
         this.visi3D.rotationZ=0.5;
-        this.visi3D.zume=450;
+        this.visi3D.zume=450;*/
+        this.content3d.rotation.x=Math.PI
         this.visi3D.position3d.isDragPan=true;
 
         this.sceneSB=new SceneSB(this.visi3D);
         var o=mhbd.getKeyId("scenes3d",2)
         var oSp=o.json
 
-       
+        window.pm=new PM(visi3D,null,this.param);
+        
 
         for (var i = 0; i <  this.sceneSB.array.length; i++) {
             if (oSp.scene[this.sceneSB.array[i].name] === undefined) {

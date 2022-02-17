@@ -914,6 +914,7 @@ export function Position (_x, _y, _z) {
 		this._y = _y || 0;
 		if (_z !== undefined) this._z = _z;
 	};
+	
 	this.setPoint = function (p) {
 		this._x = p.x;
 		this._y = p.y;

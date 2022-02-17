@@ -3,6 +3,9 @@ import { MVerh } from './MVerh.js';
 import { MBILink } from '../../component/ui/MBILink.js';
 import { MCPodskazka } from '../../component/ui/MCPodskazka.js';
 
+import { MVisi3d } from './MVisi3d.js';
+
+
 export class Menu  {
   	constructor(par, fun) {  		
   		this.type="Menu";
@@ -80,42 +83,6 @@ export class Menu  {
 
 
 
-export class MVisi3d  {
-    constructor(par, fun) {         
-        this.type="MVisi3d";
-        var self=this;
-        this.par=par;
-        this.fun=fun;
-        this.param=this.par.param;
-        this.dCont=new DCont(); 
-
-      
-
-        this.dCont.div.appendChild(this.par.par.contHTML)
-
-
-
-
-        this.mSBlok
-        this.setMSBlok=function(mSBlok){
-            this.mSBlok=mSBlok;
-            this.mSBlok.dCont.add(this.dCont)
-            this.mSBlok.sizeWin=this.sizeWin;
-        }
-        var w,h;
-        this.sizeWin = function(_w,_h){  
-            if(_w){
-                w= _w;
-                h= _h;               
-            } 
-
-            visi3D.sizeWindow(0,0,w,h);
-
-           
-          
-        }
-    }
-}
 
 
 
@@ -145,7 +112,19 @@ export class MFolders  {
 
         this.mozg=this.par.par.mozg
         this.openLoad=function(bool){            
-            this.setMOZBlok(this.mozg.kBlok)
+            //this.setMOZBlok(this.mozg.kBlok)
+            trace(this.mozg.klass, this.mozg.klass.array,this.mozg.klass.name)
+
+            trace(this.mozg.klass)
+            //this.threeImp.setObj(this.mozg.klass,"array","name")
+            var a=[]
+            for (var s in this.mozg.kBlok.objectClass) {
+                if(this.mozg.kBlok.objectClass[s].active==true)a.push(this.mozg.kBlok.objectClass[s])
+            }
+            var oo={name:"корень",array:a}
+            this.threeImp.setObj(oo,"array","name")
+
+            //this.setMOZBlok(this.mozg.klass)
         }
 
         setTimeout(function() {
@@ -163,9 +142,10 @@ export class MFolders  {
 
 
         this.setMOZBlok=function(mzBlok){
-            trace( mzBlok.name,mzBlok.uuid, mzBlok.arrImpBlok)                     
+           /* trace( mzBlok.name,mzBlok.uuid, mzBlok.arrImpBlok)                     
+            
             this.setMOd(mzBlok)
-            this.threeImp.setObj(mzBlok,"arrImpBlok","name")
+            this.threeImp.setObj(mzBlok,"arrImpBlok","name")*/
         }
 
         this.setMOd=function(mzBlok){

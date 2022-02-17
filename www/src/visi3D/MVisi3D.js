@@ -478,6 +478,7 @@ MVisi3D.prototype = {
 		this.camera.position.z = 0;
 		this.intRend = 1;
 		
+		
 	},
 	get zume () {
 		return this._zume;

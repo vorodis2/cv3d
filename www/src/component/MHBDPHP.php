@@ -55,6 +55,16 @@
         return;
     }
 
+    if($tip == "getTimeFile") {//удоление
+        
+        
+        $unix_time = filemtime($_REQUEST['dir']);
+
+        echo date('d.m.Y H:i:s', $unix_time); // вывод даты в формате ДД.ММ.ГГГГ
+     
+        return;
+    }
+
 
     if($tip == "isDir") {//Создание нового проекта  
         $dir = $_REQUEST['dir'];
