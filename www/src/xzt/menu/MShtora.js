@@ -7,14 +7,14 @@ export class MShtora  {
         this.param=this.par.param;
 
         this.dCont=new DCont(par.dCont);
-
-        this.dCont1=new DCont(par.dCont);
+      //  this.dCont.alpha=0.5
+        this.dCont1=new DCont();
         this.panel=new DPanel(this.dCont1)
 
         //this.dCont1.y=100;
         this.dCont1.x=this.param.otstup;
 
-        this.panel.height=32+this.param.otstup
+        this.panel.height=32+this.param.otstup*2
         this.array=[]
 
         this.sob=function(s,p){
@@ -24,7 +24,7 @@ export class MShtora  {
 
         this.plus=function(type, key, id, widthProsent){            
             this.array.push(new MSBlok(this,this.sob,type, key, id, widthProsent)); 
-            this.array[this.array.length-1].active=true
+            //this.array[this.array.length-1].active=true
             this.array[this.array.length-1].idArr=this.array.length-1;
             var x=this.param.otstup;
            
@@ -35,14 +35,19 @@ export class MShtora  {
                 }
                 this.array[i].button.visible=true                
             }
-           
-
-            this.panel.width=x
+            this.panel.width=x;
         }
 
-        this.plus("xz","info",18, 200);   //дерево         
-        this.plus("din","info",19,);         //3д 
-        this.plus("static","info",20, 300)   //интерфейс
+
+
+        this.plus("xz","info",18, 100);     //дерево
+        this.plus("xz","info",32, 100);     //код         
+        this.plus("din","info",19,);        //3д 
+        this.plus("static","info",20, 300)  //интерфейс
+        this.plus("xz","info",33, 100);     //демо
+
+
+      
 
 
         this.draw=function(){
@@ -94,10 +99,8 @@ export class MShtora  {
             }
         }
 
-        this.getMin = function(idArr, pp){
-            
-            var pp1=pp
-          
+        this.getMin = function(idArr, pp){            
+            var pp1=pp          
             var xx=this.array[idArr].x
             var ww=this.param.otstup
             for (var i = idArr+1; i < this.array.length; i++) {                
@@ -113,10 +116,41 @@ export class MShtora  {
             var ppo=w/s-ww-xx
 
             if(pp1>ppo)pp1=ppo
-           // trace(w,ppo,"",xx,pp)
-
             return pp1
         }
+
+        this.save = function(){  
+            var a=[]
+            for (var i = 0; i < self.array.length; i++) {
+                var oo={}
+                oo.active=self.array[i].active
+                oo.width=self.array[i].width;  
+                oo.tipe=self.array[i].tipe;
+                a.push(oo)              
+            }
+            localS.object["p_MShtora_array"]=a;
+            trace(a)
+            localS.save(); 
+        } 
+
+       if(localS.object["p_MShtora_array"]!=undefined){
+            var a=localS.object["p_MShtora_array"]
+            trace(a)
+            for (var i = 0; i < a.length; i++) {
+                if(this.array[i]==undefined)break
+                if(a[i].tipe!=this.array[i].tipe)break                 
+                this.array[i].width=  a[i].width; 
+                this.array[i].active=  a[i].active;  
+            }
+            this.draw()
+        }else{
+            for (var i = 0; i < this.array.length; i++) {
+                this.array[i].active=true;                  
+            }
+        }
+
+
+
         
 
         var w,h,s;
@@ -161,8 +195,8 @@ export class MSBlok  {
         this.dCont=new DCont(); 
 
         
-        this.dCont.y=30+this.param.otstup*4
-        trace(this.dCont)
+        this.dCont.y=30+this.param.otstup*4;
+   
         
 
 
@@ -172,19 +206,20 @@ export class MSBlok  {
        // }
 
         this.content=new DCont(this.dCont);
-        this.button=new DButton(this.dCont,0,0);
-     
+        this.button=new DButton(this.dCont,0,0);     
         this.button.width=this.param.otstup
-        // this.button=new DButton(this.dCont,this._width+this.param.otstup,0);
-        // this.button.width=this.param.otstup
+        this.button.alpha=0.2
+
 
         if(key!=undefined){
             this.button1=new DButton(this.par.dCont1,0,this.param.otstup,this.id,function(){
                 self.active = !self.active
                 self.par.draw()
+                self.par.save()
             });
             this.button1.width=this.button1.height=32
             this.button1.scalePic=1;
+
 
             mhbd.getKeyId(key,id,function(e){
                 trace(e)
@@ -232,6 +267,8 @@ export class MSBlok  {
             window.removeEventListener("mouseup", self.mouseup);
             dcmParam.removeFunMove(self.mousemove) 
             sp=undefined;
+
+             self.par.save()
         }
 
         this.button.fun_mousedown = function(){

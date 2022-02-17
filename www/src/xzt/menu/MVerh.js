@@ -1,4 +1,6 @@
 
+
+
 export class MVerh  {
     constructor(par, fun) {         
         this.type="MVerh";
@@ -34,7 +36,6 @@ export class MVerh  {
 
             })
 
-
             var bb=this.mvButton.plus("but","info",8);
             bb.setMenu(this.mvVunor)
 
@@ -51,7 +52,6 @@ export class MVerh  {
         }
 
         this.setMShtora = function(mShtora){
-
             this.mVStart.setMShtora(mShtora)
         }
 
@@ -222,17 +222,26 @@ export class MVStart {
             setTimeout(function() {
                 self.par.par.par.mozg.setJSKoren(self.arrComp[2].value)
             }, 10);
-
         }
 
 
         this.setMShtora = function(mShtora){
+
             let yy=this.window.height-32
-            let lab=new DLabel(this.window.content,this.param.otstup,yy,"Управление шторами")
+            let lab=new DLabel(this.window.content,this.param.otstup,yy," ")
             lab.width=this.window.width
             lab.activeMouse=false
             lab.fontSize=this.param.fontSizeLittel
-            yy+=this.param.otstup*3
+
+            mhbd.getKeyId("info",31,function(e){                
+                languages.setCompObj(lab,e,"text")
+            })
+
+
+            yy+=this.param.otstup*3;
+
+
+
             trace(mShtora.panel.height)
             mShtora.dCont1.y=yy
             yy+=mShtora.panel.height+this.param.otstup
@@ -775,8 +784,7 @@ export class MVButton  {
                     this.array[i].button.x=w/s-(32+this.param.otstup)*(i+1)-this.param.otstup*3
                 }
             }            
-        }
-  
+        }  
     }
     set index(value) {
         if(this._index!=value){

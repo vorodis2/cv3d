@@ -123,7 +123,7 @@ export class M3Yzel  {
         })
 
         visi3D.fun_rotationZ = function () { 
-            trace("99");           
+
             for (var i = 0; i < self.array.length; i++) {
                 if(self.array[i].fun_rotationZ){
                     self.array[i].fun_rotationZ(visi3D.rotationZ)
@@ -144,7 +144,7 @@ export class M3Position  {
         this.fun=fun;
         this.param=this.par.param;
 
-        this.mouseup = function (e) {
+        /*this.mouseup = function (e) {
 
             
             if (self.mobile == false) {
@@ -169,7 +169,12 @@ export class M3Position  {
             } else {
                 document.addEventListener('mouseup', self.mouseup);
             }    
-        }  
+        } */ 
+        
+
+        this.start=function(){
+
+        }
 
 
         this.fun_rotationZ = function (rotation) { 
