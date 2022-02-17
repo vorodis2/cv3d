@@ -1,6 +1,4 @@
 
-
-
 export class MVerh  {
     constructor(par, fun) {         
         this.type="MVerh";
@@ -36,6 +34,7 @@ export class MVerh  {
 
             })
 
+
             var bb=this.mvButton.plus("but","info",8);
             bb.setMenu(this.mvVunor)
 
@@ -51,7 +50,10 @@ export class MVerh  {
 
         }
 
+        this.setMShtora = function(mShtora){
 
+            this.mVStart.setMShtora(mShtora)
+        }
 
 
         var w,h,s;
@@ -222,6 +224,22 @@ export class MVStart {
             }, 10);
 
         }
+
+
+        this.setMShtora = function(mShtora){
+            let yy=this.window.height-32
+            let lab=new DLabel(this.window.content,this.param.otstup,yy,"Управление шторами")
+            lab.width=this.window.width
+            lab.activeMouse=false
+            lab.fontSize=this.param.fontSizeLittel
+            yy+=this.param.otstup*3
+            trace(mShtora.panel.height)
+            mShtora.dCont1.y=yy
+            yy+=mShtora.panel.height+this.param.otstup
+            this.window.height=yy+32
+            this.window.content.add(mShtora.dCont1) 
+        }
+
 
         this.init1()
     }

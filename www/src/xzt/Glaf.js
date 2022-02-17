@@ -25,7 +25,7 @@ export class Glaf  {
 
         this.par=par;
         this.param=this.par.param 
-
+     
         this.contHTML= document.createElement('div');
         this.contHTML.style.position = 'fixed';
         this.contHTML.style.top = '0px';         //drflgkjdflg  dasdasdf dasgfadsgf ads z dasgfda            fgh
