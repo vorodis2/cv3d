@@ -48,7 +48,14 @@ export class Menu  {
 
             this.mFolders.setMSBlok(this.mShtora.array[0]);
 
-            this.mVisi3d.setMSBlok(this.mShtora.array[1]);
+            for (var i = 0; i < this.mShtora.array.length; i++) {
+                if(this.mShtora.array[i].tipe=="din"){
+                    this.mVisi3d.setMSBlok(this.mShtora.array[i]);
+                    break
+                }
+            }
+            
+
 
             this.mVerh.setMShtora(this.mShtora)
 
@@ -117,10 +124,11 @@ export class MFolders  {
         this.mozg=this.par.par.mozg
         this.openLoad=function(bool){            
             //this.setMOZBlok(this.mozg.kBlok)
-            trace(this.mozg.klass, this.mozg.klass.array,this.mozg.klass.name)
+         
 
-            trace(this.mozg.klass)
-            //this.threeImp.setObj(this.mozg.klass,"array","name")
+         
+            this.threeImp.setObj(this.mozg.klass,"array","name")
+            return
             var a=[]
             for (var s in this.mozg.kBlok.objectClass) {
                 if(this.mozg.kBlok.objectClass[s].active==true)a.push(this.mozg.kBlok.objectClass[s])

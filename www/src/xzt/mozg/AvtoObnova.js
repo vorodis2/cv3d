@@ -1,5 +1,4 @@
 
-
 export class AvtoObnova  {
   	constructor(par, fun) {  		
   		this.type="AvtoObnova";
@@ -19,17 +18,18 @@ export class AvtoObnova  {
                 self._life=self.par._life                        
             })
         }
-
-
-
+        
         let timerId = setInterval(() =>{
             if(self._life==false)return
             mhbd.setPHP({tip:"getTimeFile",dir:self.par.link},  function(data){   
                 if(self.time!==data){
                     self.fun("upLoad")
                 }
-            })
+            })        
         }, 1000);
+
+
+
     }  
     set life(value) {
         if(this._life!=value){
