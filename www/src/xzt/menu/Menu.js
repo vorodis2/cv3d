@@ -6,6 +6,7 @@ import { MCPodskazka } from '../../component/ui/MCPodskazka.js';
 import { MVisi3d } from './MVisi3d.js';
 
 import { MShtora } from './MShtora.js';
+import { MHelp } from './MHelp.js';
 
 
 export class Menu  {
@@ -43,17 +44,54 @@ export class Menu  {
 
             })
 
+
+            this.array[6]=this.mHelp=new MHelp(this,function(s,p){
+
+            })
+
+
+            this.array[6].active=true
+            this.array[6].width=999
+            this.array[6].height=399
+            this.array[6].setPage([
+                {type:"pic", ru:{key:"info", id:2}, en:{key:"info", id:4},x:60,y:0,w:100,h:100}
+                ])
+           this.array[6].setPage([
+                {type:"text", key:"info", id:23, x:-100,y:0,w:100,h:324},
+                {type:"pic", ru:{key:"info", id:23}, en:{key:"info", id:21},x:60,y:0,w:300,h:34}
+            ])
+
+            /*setTimeout(function() {
+                self.mHelp.leng="en"
+            }, 5010);*/
+
+
             
+
+            //this.array[6].setPage()
+            //this.array[6].setPage()
+
+           
+
 
 
             this.mFolders.setMSBlok(this.mShtora.array[0]);
 
-            this.mVisi3d.setMSBlok(this.mShtora.array[1]);
+            //this.mVisi3d.setMSBlok(this.mShtora.array[1]);
+
+            for (var i = 0; i < this.mShtora.array.length; i++) {
+                if(this.mShtora.array[i].tipe=="din"){
+                    this.mVisi3d.setMSBlok(this.mShtora.array[i]);
+                    break
+                }
+            } 
 
             this.mVerh.setMShtora(this.mShtora)
 
 
             this.dCont.add(this.mVerh.dCont)
+
+            this.dCont.add(this.mHelp.dCont)
 
             window.mbILink= this.array[4] = new MBILink(this,function(s,p,p1){  
 
@@ -62,6 +100,8 @@ export class Menu  {
 
             this.dCont.remove(mCPodskazka.dCont)
             this.dCont.add(mCPodskazka.dCont)
+
+
         }
 
 

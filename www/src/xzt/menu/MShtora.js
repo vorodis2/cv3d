@@ -1,3 +1,8 @@
+
+/**
+ * Модуль шторы для изменения ширины панелей рабочей области
+ * */
+
 export class MShtora  {
     constructor(par, fun) {         
         this.type="MShtora";
@@ -7,11 +12,9 @@ export class MShtora  {
         this.param=this.par.param;
 
         this.dCont=new DCont(par.dCont);
-      //  this.dCont.alpha=0.5
         this.dCont1=new DCont();
         this.panel=new DPanel(this.dCont1)
 
-        //this.dCont1.y=100;
         this.dCont1.x=this.param.otstup;
 
         this.panel.height=32+this.param.otstup*2
@@ -22,7 +25,7 @@ export class MShtora  {
         }
 
 
-        this.plus=function(type, key, id, widthProsent){            
+        this.plus=function(type, key, id, widthProsent){            //добавление нового блока шторы
             this.array.push(new MSBlok(this,this.sob,type, key, id, widthProsent)); 
             //this.array[this.array.length-1].active=true
             this.array[this.array.length-1].idArr=this.array.length-1;
@@ -50,9 +53,9 @@ export class MShtora  {
       
 
 
-        this.draw=function(){
+        this.draw=function(){                           //функция отрисовки штор
 
-            var ww=w/s-this.param.otstup;
+            var ww=w/s-this.param.otstup;               //общая ширина окна
 
             for (var i = 0; i < this.array.length; i++) {
                 if(this.array[i].active==true){                 
@@ -60,7 +63,7 @@ export class MShtora  {
                 }
             }
 
-            for (var i = 0; i < this.array.length; i++) {
+            for (var i = 0; i < this.array.length; i++) {  // вычисляем остаток ширины окна для блока 3Д
                 if(this.array[i].active==true){
                     ww-=this.param.otstup;
                     if(this.array[i].tipe=="xz" || this.array[i].tipe=="static"){
@@ -69,7 +72,7 @@ export class MShtora  {
                 }
             }
 
-            for (var i = 0; i < this.array.length; i++) {
+            for (var i = 0; i < this.array.length; i++) {  //задаем блоку 3Д оставшуюся ширину равную общей ширине окна минус ширина остальных блоков
                 if(this.array[i].active==true){
                     if(this.array[i].tipe=="din"){
                         this.array[i].width=ww
@@ -83,7 +86,7 @@ export class MShtora  {
              }
 
             var xx=this.param.otstup;
-            for (var i = 0; i < this.array.length; i++) {
+            for (var i = 0; i < this.array.length; i++) {   //задаем стартовую позицию блоков по горизонтали после расчета их ширины
                 if(this.array[i].active==true){
                     this.array[i].x=xx;
                     xx+=this.array[i].width+this.param.otstup;
@@ -91,7 +94,8 @@ export class MShtora  {
                 }
             }
 
-            for (var i = this.array.length - 1; i >= 0; i--) {
+
+            for (var i = this.array.length - 1; i >= 0; i--) {  //убираем кнопку шторы для последней панели
                 if(this.array[i].active==true){
                     this.array[i].button.visible=false;
                     break
@@ -99,7 +103,8 @@ export class MShtora  {
             }
         }
 
-        this.getMin = function(idArr, pp){            
+
+        this.getMin = function(idArr, pp){          //вычисляем дистанцию смещения шторы  
             var pp1=pp          
             var xx=this.array[idArr].x
             var ww=this.param.otstup
@@ -114,12 +119,11 @@ export class MShtora  {
                 }
             }
             var ppo=w/s-ww-xx
-
             if(pp1>ppo)pp1=ppo
             return pp1
         }
 
-        this.save = function(){  
+        this.save = function(){                     //фиксируем ширину штор при перезагрузке браузера.страницы
             var a=[]
             for (var i = 0; i < self.array.length; i++) {
                 var oo={}
@@ -129,13 +133,11 @@ export class MShtora  {
                 a.push(oo)              
             }
             localS.object["p_MShtora_array"]=a;
-            trace(a)
             localS.save(); 
         } 
 
        if(localS.object["p_MShtora_array"]!=undefined){
             var a=localS.object["p_MShtora_array"]
-            trace(a)
             for (var i = 0; i < a.length; i++) {
                 if(this.array[i]==undefined)break
                 if(a[i].tipe!=this.array[i].tipe)break                 
@@ -148,7 +150,6 @@ export class MShtora  {
                 this.array[i].active=true;                  
             }
         }
-
 
 
         
@@ -168,6 +169,8 @@ export class MShtora  {
         
     }
 }
+
+
 
 export class MSBlok  {
     constructor(par, fun, tipe, key, id, widthProsent) {         
@@ -192,35 +195,30 @@ export class MSBlok  {
         }
         this._active=false;
 
-        this.dCont=new DCont(); 
+        this.dCont=new DCont();                 //основной контейнер для штор
 
         
         this.dCont.y=30+this.param.otstup*4;
    
         
+        this.panel=new DPanel(this.dCont,0,0);  // пнель с кнопками отображения/скрытия панелей-штор
 
 
-        this.panel=new DPanel(this.dCont,0,0);
-       // if(tipe=="static"){ 
-            //this.panel.color="#333333"//+Math.round(Math.random()*9999)
-       // }
-
-        this.content=new DCont(this.dCont);
-        this.button=new DButton(this.dCont,0,0);     
+        this.content=new DCont(this.dCont);      // контейнер для того чтобы кнопка была поверх контента шторы 
+        this.button=new DButton(this.dCont,0,0); //кнопка шторы для изменения размеров шторы
         this.button.width=this.param.otstup
         this.button.alpha=0.2
+        this.button.width=this.param.otstup;
 
 
         if(key!=undefined){
-            this.button1=new DButton(this.par.dCont1,0,this.param.otstup,this.id,function(){
+            this.button1=new DButton(this.par.dCont1,0,this.param.otstup,this.id,function(){ //кнопка отображения/скрытия панели
                 self.active = !self.active
                 self.par.draw()
                 self.par.save()
             });
             this.button1.width=this.button1.height=32
             this.button1.scalePic=1;
-
-
             mhbd.getKeyId(key,id,function(e){
                 trace(e)
                 self.button1.link=mhbd.getLink(e.icon);
@@ -229,17 +227,9 @@ export class MSBlok  {
             })
         }
 
-        // this.chek=new DCheckBox(this.dCont,20,200,"test",function(){
-        //     self.active = this.value
-        //     self.par.draw()
-        // })
 
-        //var xxx=0
-        //var x
         var sp=undefined;
-
-        this.mousemove=function(e){
-
+        this.mousemove=function(e){                   //вычисляем смещение курсора при движении указателя мышки
             if(dcmParam.mobile==false){
                 if(sp==undefined){
                     sp={                    
@@ -263,55 +253,42 @@ export class MSBlok  {
             self.drag();
         }
 
-        this.mouseup = function(){
+        this.mouseup = function(){                    //ловим событие окончания перетаскивания шторы
             window.removeEventListener("mouseup", self.mouseup);
             dcmParam.removeFunMove(self.mousemove) 
             sp=undefined;
-
-             self.par.save()
+            self.par.save()
         }
 
-        this.button.fun_mousedown = function(){
+        this.button.fun_mousedown = function(){         //ловим событие нажатия на край шторы для начала перетаскивания
             dcmParam.addFunMove(self.mousemove)
             window.addEventListener("mouseup", self.mouseup);
            
         };
 
-        this.button.fun_mouseover = function(){          
+        this.button.fun_mouseover = function(){          //изменение иконки указателя мышки при наведении на край шторы
             self.button.panel1.div.style.cursor = 'ew-resize';
         };
 
-
-        this.button.width=this.param.otstup;
-
-        this.drag=function(){
-
+        this.drag=function(){                            //вычисление расстояния при перетаскивании шторы
             if(tipe=="static"){
                 this.x=sp.x-sp.xxx
-
-                trace(this.x,sp)
                 this.par.draw()
                 return
-            }
-           
+            }         
             var pp=sp.width-sp.xxx
-            //if (this.tipe=='xz') {
                 pp<this.min ? pp=this.min : pp=pp;
-            //}
             var pp1=this.par.getMin(this.idArr,pp)
-
             this.width=pp1;
             this.par.draw()
         }
 
-        this.draw=function(){
+        this.draw=function(){                            //отрисовка блоков штор
             var xx=this.param.otstup
             this.panel.height=h/s-this.dCont.y-this.param.otstup
             this.panel.width=this._width;
             this.button.x=this._width;   
-
             this.button.height=this.panel.height
-
             if(this.sizeWin)this.sizeWin(this.panel.width,this.panel.height)
 
         }
@@ -328,7 +305,7 @@ export class MSBlok  {
         }  
     }
 
-    set active(value) {       
+    set active(value) {               //сеттер для добавления или скрытия панели при нажатии на соответсвующую кнопку
         if (this._active != value) {
             this._active = value;
             if(this._active==true){
@@ -338,7 +315,6 @@ export class MSBlok  {
                 if(this.button1)this.button1.color=dcmParam.color
                 this.par.dCont.remove(this.dCont)
             }
-
             this.draw()    
         }
     }
@@ -346,7 +322,7 @@ export class MSBlok  {
         return this._active;
     }
 
-    set width(value) {
+    set width(value) {              //сеттер минимальной ширины панели
         if (this._width != value) {
             this._width = value; 
             if(this._width<this.min){
@@ -358,6 +334,7 @@ export class MSBlok  {
     get width() {
         return this._width;
     }
+
 
     set x(value) {
         if (this._x != value) {
