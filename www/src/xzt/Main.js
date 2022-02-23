@@ -5,11 +5,20 @@ import { Calc } from '../component/Calc.js';
 
 import { LocalStorage} from '../component/LocalStorageE6.js';
 import {Languages} from '../component/Languages.js';
+
+
+//import { TLabel } from '../t3d/TStyle.js';
+
+import { TStyle } from '../t3d/TStyle.js';
+
+
+
+
 export class Main{
   	constructor(fun) {  		
   		this.type="Main";  		  		
-  		var self=this;
-		this.contentHTML= document.createElement('div');
+        var self=this;
+		this.contentHTML= document.createElement('div');// dsdsg dsfg dsg sdgf dsgffg sdgfdsfg sdgf sdfg sdgf sdfg sdgf
 		this.contentHTML.style.position = 'fixed';
 		this.contentHTML.style.top = '0px';			
 		this.contentHTML.style.left = '0px';
@@ -69,16 +78,26 @@ export class Main{
   		window.calc=new Calc()
   		this.param = new Param().param;
 
-  		this.param.wh=32;
+  		this.param.wh=32;;
+  		dcmParam.color="#777777";
 
+  		dcmParam.color1="#303841"
+  		//this.param.colorFont="#303841"
 
+  		window.tStyle=new TStyle();
+  		document.body.style.backgroundColor = "#303841"
+  		window.tStyle._gage=0.1
 
    		window.mhbd=new MHBDPHP(this);
 		window.mhbd.load(
 			function(){
-				
-				self.start()
-				
+				var loader = new THREE.FontLoader();
+				loader.load( 'resources/font/helvetiker_bold.typeface.json', function ( font ) {
+					tStyle._fontSize=self.param.fontSizeLittel 
+
+					tStyle.addFont(font);
+					self.start()
+				})				
 			}
 		);  		
   	}

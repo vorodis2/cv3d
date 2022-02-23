@@ -64,8 +64,14 @@ export function Calc () {
 		}
 		p2 = p2 || rezNull;
 
-		if(p1.z &&p.z)return Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2)+ Math.pow((p1.z - p2.z), 3));
+		//if(p1.z &&p.z)return Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2)+ Math.pow((p1.z - p2.z), 3));
+		
+		
 		return Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2));
+	};
+
+	this.getDistance3d = function (p1, p2) {					
+		return Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2)+ Math.pow((p1.z - p2.z), 2));
 	};
 
 	/**

@@ -24,7 +24,7 @@ export class MHBDPHP {
     this.load=function(fun){
        
         $.ajax({
-            url: "resources/date/config.json",
+            url: "resources/date/config.json?"+Math.random(),
             success: function function_name(data) {                         
                 if(typeof data === "string") {
                     var conf = JSON.parse(data)

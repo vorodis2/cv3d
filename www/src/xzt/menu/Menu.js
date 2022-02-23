@@ -49,42 +49,34 @@ export class Menu  {
 
             })
 
-
-            this.array[6].active=true
+/*
+            
             this.array[6].width=999
             this.array[6].height=399
             this.array[6].setPage([
                 {type:"pic", ru:{key:"info", id:2}, en:{key:"info", id:4},x:60,y:0,w:100,h:100}
                 ])
            this.array[6].setPage([
-                {type:"text", key:"info", id:23, x:-100,y:0,w:100,h:324},
-                {type:"pic", ru:{key:"info", id:23}, en:{key:"info", id:21},x:60,y:0,w:300,h:34}
+                {type:"text", key:"info", id:3, x:-100,y:0,w:100,h:324},
+                {type:"pic", ru:{key:"info", id:3}, en:{key:"info", id:1},x:60,y:0,w:300,h:34}
             ])
 
-            /*setTimeout(function() {
-                self.mHelp.leng="en"
-            }, 5010);*/
 
-
-            
-
-            //this.array[6].setPage()
-            //this.array[6].setPage()
-
+this.array[6].active=true*/
            
 
 
 
             this.mFolders.setMSBlok(this.mShtora.array[0]);
 
-            //this.mVisi3d.setMSBlok(this.mShtora.array[1]);
-
             for (var i = 0; i < this.mShtora.array.length; i++) {
                 if(this.mShtora.array[i].tipe=="din"){
                     this.mVisi3d.setMSBlok(this.mShtora.array[i]);
                     break
                 }
-            } 
+            }
+            
+
 
             this.mVerh.setMShtora(this.mShtora)
 
@@ -157,10 +149,11 @@ export class MFolders  {
         this.mozg=this.par.par.mozg
         this.openLoad=function(bool){            
             //this.setMOZBlok(this.mozg.kBlok)
-            trace(this.mozg.klass, this.mozg.klass.array,this.mozg.klass.name)
+         
 
-            trace(this.mozg.klass)
-            //this.threeImp.setObj(this.mozg.klass,"array","name")
+         
+            this.threeImp.setObj(this.mozg.klass,"array","name")
+            return
             var a=[]
             for (var s in this.mozg.kBlok.objectClass) {
                 if(this.mozg.kBlok.objectClass[s].active==true)a.push(this.mozg.kBlok.objectClass[s])

@@ -11,6 +11,11 @@ import { Menu } from './menu/Menu.js';
 import { Mozg } from './mozg/Mozg.js';
 
 import { SceneSB } from '../libMy/visi3D/SceneSB.js'
+
+import { RedactCode } from './redactCode/RedactCode.js'
+
+
+
 export class Glaf  {
   	constructor(par) {  		
   		this.type="Glaf";
@@ -62,7 +67,7 @@ export class Glaf  {
         this.dCont = new DCont(par.contentHTML);
 
 
-        this.mozg = new Mozg(this, function(s, p){
+        this.mozg = new Mozg(this, function(s, p, p1){
             if(s=="visi3d"){
                 self.visi3D.intRend=1;
                 return
@@ -70,6 +75,7 @@ export class Glaf  {
 
             if(s=="openLoad"){
                 self.menu.mFolders.openLoad(p);
+                self.scane3d.setSob(s, p, p1);
             }                            
         }) 
 
@@ -96,6 +102,20 @@ export class Glaf  {
 
         }) 
 
+        this.redactCode = new RedactCode(this, function(s, p){
+            if(s=="visi3d"){
+                self.visi3D.intRend=1;
+                return
+            } 
+            if(s=="test"){                
+                self.scane3d.test();
+                return
+            } 
+
+        }) 
+
+        
+
 
 		this.update = function () {
 			this.visi3D.upDate()	
@@ -105,16 +125,75 @@ export class Glaf  {
         var w,h,s;
   		this.sizeWindow = function(_w,_h,_s){  
             if(_w){
-                w= _w;
-                h= _h;
-                s= _s;   
+                w = _w;
+                h = _h;
+                s = _s;   
             }
 
   			this.scale=s;
-            this.dCont.scale=s;
-            
+            this.dCont.scale=s; 
             this.scane3d.sizeWindow(w,h,s);
-            this.menu.sizeWindow(w,h,s);
+            this.menu.sizeWindow(w,h,s);            
   		}
+
+        this.sfghf = function(){ 
+            trace("!!!!!!",w)
+        }
+
+        
+
+/*
+        setTimeout(function() {
+            trace("!!!!!!")
+            eval(`var w,h,s;
+            self.sizeWindow = function(_w,_h,_s){  
+                if(_w){
+                    w= _w;
+                    h= _h;
+                    s= _s;   
+                }
+                
+                self.scale=s;
+                self.dCont.scale=s;
+                
+                self.scane3d.sizeWindow(w,h,s);
+                self.menu.sizeWindow(w,h,s);
+                
+            }`)
+            self.sizeWindow()
+            self.sfghf()
+            trace(self)
+        }, 3000);*/
+
+
+
+      /* document.onkeydown = function(event) {
+            trace(event.keyCode)
+            if (event.ctrlKey && (event.keyCode == 85) || (event.ctrlKey && event.shiftKey && (event.keyCode == 73)) || event.keyCode == 123) {
+                
+            }
+            return false
+        }*/
+
+     /*   this.keydown=function(e){
+            if(arrNa.indexOf(e.keyCode)==-1){
+                arrNa.push(e.keyCode);
+            }
+            //self.scane3d.sobKey("down", e, arrNa);  
+            return false
+        }
+        this.keyup=function(e){ 
+            self.scane3d.sobKey("up", e, arrNa);            
+            for (var i = 0; i < arrNa.length; i++) {
+                if(arrNa[i]==e.keyCode){
+                    arrNa.splice(i,1)
+                    i=0
+                }
+            }    
+            return false       
+        }
+        window.addEventListener( 'keydown', this.keydown );    
+        window.addEventListener( 'keyup', this.keyup );*/
+
   	}
 }

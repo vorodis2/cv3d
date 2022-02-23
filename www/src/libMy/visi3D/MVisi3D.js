@@ -389,6 +389,7 @@ export function MVisi3D (_contentHTML, _content2d, _devas, _directional, _efect,
 	this.removeChildMouse = function (child) { if (this.event3DArr) this.event3DArr.removeChild(child); };/**/
 	this.fun_rotationX
 	this.fun_rotationZ
+	this.fun_dragScane
 }
 
 MVisi3D.prototype = {
@@ -406,6 +407,7 @@ MVisi3D.prototype = {
 		this.intRend = 1;
 		this.gCam2.rotation.x = v;		
 		if(this.fun_rotationX)this.fun_rotationX()
+		if(this.fun_dragScane)this.fun_dragScane()
 	},
 	get rotationX () {
 		return this._rotationX;
@@ -416,6 +418,7 @@ MVisi3D.prototype = {
 		this.gCam1.rotation.z = v;
 		this.intRend = 1;
 		if(this.fun_rotationZ)this.fun_rotationZ()
+		if(this.fun_dragScane)this.fun_dragScane()	
 	},
 	get rotationZ () {
 		return this._rotationZ;
@@ -426,7 +429,8 @@ MVisi3D.prototype = {
 		this.ggCam.position.z = -v;
 		this.camera.position.z = 0;
 		this.intRend = 1;		
-		if(this.fun_rotationZ)this.fun_rotationZ()
+		if(this.fun_dragScane)this.fun_dragScane()
+
 		
 	},
 	get zume () {
@@ -448,6 +452,7 @@ MVisi3D.prototype = {
 		this._yVerh = v;
 		this.gCGG.position.z = v;
 		this.intRend = 1;
+		if(this.fun_dragScane)this.fun_dragScane()
 	},
 	get yVerh () {
 		return this.gCGG.position.z;
@@ -456,6 +461,7 @@ MVisi3D.prototype = {
 		this._xVerh = v;
 		this.gCGG.position.x = v;
 		this.intRend = 1;
+		if(this.fun_dragScane)this.fun_dragScane()
 	},
 	get xVerh () {
 		return this.gCGG.position.x;
@@ -464,6 +470,7 @@ MVisi3D.prototype = {
 		this._zVerh = v;
 		this.gCGG.position.y = v;
 		this.intRend = 1;
+		if(this.fun_dragScane)this.fun_dragScane()
 	},
 	get zVerh () {
 		return this.gCGG.position.y;
@@ -473,6 +480,7 @@ MVisi3D.prototype = {
 		if(this.alpha==true)return
 		
 		if(this.efect)this.efect.setValue(this._arrOut);
+		if(this.fun_dragScane)this.fun_dragScane()
 		
 		this.intRend = 1;
 	},

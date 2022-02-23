@@ -2,7 +2,7 @@
 import { Mozg3D } from './mozg3d/Mozg3D.js';
 
 
-export class Scane3d  {
+export class Scane3d{
   	constructor(par, fun) {  		
   		this.type="Scane3d";
   		var self=this;
@@ -28,23 +28,24 @@ export class Scane3d  {
 
         this.array=[]
 
-        this.content3d=new THREE.Object3D()
-        this.par.content3d.add(this.content3d)
-       
+        this.content3d=new THREE.Object3D();
+        this.par.content3d.add(this.content3d); 
 
 
-        
-
-        this.array[0]=this.mozg3D=new Mozg3D(this,function(s,p){
-
+        this.array[0]=this.mozg3D=new Mozg3D(this,function(s,p,p1){
+            self.fun(s,p,p1)
         })
 
-        this.array[1]=this.m3Yzel=new M3Yzel(this,function(s,p){
-
+        this.array[1]=this.m3Yzel=new M3Yzel(this,function(s,p,p1){
+            self.fun(s,p,p1)
         })
 
 
-
+        this.setSob=function(s, p, p1){
+            for (var i = 0; i < this.array.length; i++) {
+                if(this.array[i].setSob!=undefined)this.array[i].setSob(s, p, p1);
+            }  
+        }
 
 
         var w,h,s;
@@ -123,10 +124,19 @@ export class M3Yzel  {
         })
 
         visi3D.fun_rotationZ = function () { 
-
+            self.par.mozg3D.fun_rotationZ(visi3D.rotationZ)
             for (var i = 0; i < self.array.length; i++) {
                 if(self.array[i].fun_rotationZ){
                     self.array[i].fun_rotationZ(visi3D.rotationZ)
+                }
+            }
+            
+        } 
+
+        visi3D.fun_dragScane = function () {
+            for (var i = 0; i < self.array.length; i++) {
+                if(self.array[i].fun_dragScane){
+                    self.array[i].fun_dragScane()
                 }
             }
             
@@ -144,41 +154,28 @@ export class M3Position  {
         this.fun=fun;
         this.param=this.par.param;
 
-        /*this.mouseup = function (e) {
-
-            
-            if (self.mobile == false) {
-                document.removeEventListener('mouseup', self.mouseup);
-            } else {
-                document.removeEventListener('touchend', self.mouseup);
-            }
-            self.bool=false
-
-            trace("!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        };
-
-
-
-        this.bool=false
-        this.start=function(){
-            if(this.bool==true)return
-            this.bool=true;
-            
-            if (dcmParam.mobile == false) {
-                document.addEventListener('mouseup', self.mouseup);
-            } else {
-                document.addEventListener('mouseup', self.mouseup);
-            }    
-        } */ 
+        if(localS.object["p_Scane3d_M3Position_visi3d_obj"]!==undefined){
+            visi3D.setObj(localS.object["p_Scane3d_M3Position_visi3d_obj"])
+        }
         
 
-        this.start=function(){
-
+        this.save=function(){ 
+            var o=visi3D.getObj()            
+            localS.object["p_Scane3d_M3Position_visi3d_obj"]=o;
+            localS.save(); 
         }
 
+        this.sah=0
+        this.saveTime=function(){
+            this.sah++;
+            var s=this.sah;
+            setTimeout(function() {
+                if(self.sah==s)self.save()
+            }, 100);
+        }  
 
-        this.fun_rotationZ = function (rotation) { 
-            this.start()            
+        this.fun_dragScane = function (rotation) { 
+            this.saveTime();           
         }
     }
 }
@@ -194,7 +191,7 @@ export class M3YNiz  {
         this.fun=fun;
         this.param=this.par.param
 
-        this.radius=500;
+        this.radius=100;
         this.segments=64;
         this.otstup=this.param.otstup
         this.content3d=new THREE.Object3D();

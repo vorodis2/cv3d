@@ -264,11 +264,11 @@ export default function PMMat(par, visi3D, objbase) {
             id=a[1]*1
         }
         
-        trace("!!`",id)
+      
         var m =new THREE.MeshPhongMaterial()      
         m.idUz=id
         mhbd.getKeyId("materials",id,function(e){
-            trace(e)
+           
             m.userData=e
             self.startMat2(e.json, m)           
         })

@@ -221,9 +221,13 @@ export class MSBlok  {
             this.button1.scalePic=1;
             mhbd.getKeyId(key,id,function(e){
                 trace(e)
-                self.button1.link=mhbd.getLink(e.icon);
-                mCPodskazka.setBuuton(self.button1,e)
-                //languages.setCompObj(self.arrComp[13],e)
+                if(e){
+                    self.button1.link=mhbd.getLink(e.icon);
+                    mCPodskazka.setBuuton(self.button1,e)
+                    //languages.setCompObj(self.arrComp[13],e)
+
+                }
+                
             })
         }
 
