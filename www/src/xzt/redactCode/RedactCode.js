@@ -14,9 +14,6 @@ export class RedactCode  {
 
         this._index=-1
 
-
-
-
         this.sob=function(s,p,p1){
 
         }
@@ -34,12 +31,32 @@ export class RedactCode  {
             return blok;
         }
 
+
+
+        this.openLoad=function(p){
+            
+           /* var o={tip:"getFiles1",dir:"../../"}
+
+            mhbd.setPHP(o,function(date){
+                
+                var oo=JSON.parse(date)
+                trace(oo,date)
+            })*/
+        }
+
+        this.openLoad2=function(p){
+
+
+        }
+
+
+/*
         setTimeout(function() {
             let blok=self.creat()
             blok.life=true;
             self.index=0;
             blok.setMZBlok(self.par.mozg.kBlok)
-        }, 1000);
+        }, 1000);*/
 
         
 

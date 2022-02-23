@@ -7,6 +7,8 @@ import { MVisi3d } from './MVisi3d.js';
 
 import { MShtora } from './MShtora.js';
 
+import { MFolders } from './MFolders.js';
+
 
 export class Menu  {
   	constructor(par, fun) {  		
@@ -97,107 +99,6 @@ export class Menu  {
 
 
 
-
-export class MFolders  {
-    constructor(par, fun) {         
-        this.type="MFolders";
-        var self=this;
-        this.par=par;
-        this.fun=fun;
-        this.param=this.par.param;
-        this.dCont=new DCont(); 
-
-        
-       /* this.input=new DInput(this.dCont,this.param.otstup,this.param.otstup,"../../src/xzt/Main.js",function(){
-
-        })
-        this.button=new DButton(this.dCont,this.param.otstup,this.param.otstup,"start",function(){
-            
-            var b = self.par.par.mozg.setJSKoren(self.input.text)
-        })
-        this.button.width=32*/
-
-        this.panel=new DPanel(this.dCont,this.param.otstup,this.param.otstup)
-        this.panel.height=32+this.param.otstup*2
-
-
-        this.mozg=this.par.par.mozg
-        this.openLoad=function(bool){            
-            //this.setMOZBlok(this.mozg.kBlok)
-         
-
-         
-            this.threeImp.setObj(this.mozg.klass,"array","name")
-            return
-            var a=[]
-            for (var s in this.mozg.kBlok.objectClass) {
-                if(this.mozg.kBlok.objectClass[s].active==true)a.push(this.mozg.kBlok.objectClass[s])
-            }
-            var oo={name:"корень",array:a}
-            this.threeImp.setObj(oo,"array","name")
-
-            //this.setMOZBlok(this.mozg.klass)
-        }
-
-        setTimeout(function() {
-            //self.par.par.mozg.setJSKoren(self.input.text)
-        }, 10);
-
-       
-
-        
-
-
-        this.threeImp=new DThree(this.dCont,this.param.otstup,this.param.otstup*4+32,function(){
-        
-        })  
-
-
-        this.setMOZBlok=function(mzBlok){
-           /* trace( mzBlok.name,mzBlok.uuid, mzBlok.arrImpBlok)                     
-            
-            this.setMOd(mzBlok)
-            this.threeImp.setObj(mzBlok,"arrImpBlok","name")*/
-        }
-
-        this.setMOd=function(mzBlok){
-             
-            /*for (var i = 0; i < mzBlok.arrImpBlok.length; i++) {
-                this.setMOd(mzBlok.arrImpBlok[i])
-            }*/
-        }
-
-
-
-
-
-
-        this.mSBlok
-        this.setMSBlok=function(mSBlok){
-            this.mSBlok=mSBlok;
-            this.mSBlok.dCont.add(this.dCont)
-            this.mSBlok.sizeWin=this.sizeWin;
-        }
-        var w,h;
-        this.sizeWin = function(_w,_h){  
-            if(_w){
-                w= _w;
-                h= _h;               
-            } 
-
-            /*self.button.width= w/4   
-            self.input.x=self.param.otstup
-            self.input.y=self.param.otstup
-            self.input.width=w-self.param.otstup*3-self.button.width
-            self.button.y=self.param.otstup
-            self.button.x=self.param.otstup*2+self.input.width
-*/
-            self.panel.width=w-self.param.otstup*2
-            self.threeImp.width=w-self.param.otstup*2
-            self.threeImp.height=h-self.threeImp.y-self.param.otstup
-        }
-    }
-}
 
 
 

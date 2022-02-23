@@ -75,6 +75,7 @@ export class Glaf  {
 
             if(s=="openLoad"){
                 self.menu.mFolders.openLoad(p);
+                self.redactCode.openLoad()
                 self.scane3d.setSob(s, p, p1);
             }                            
         }) 

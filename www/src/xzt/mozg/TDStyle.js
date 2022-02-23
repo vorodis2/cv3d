@@ -12,7 +12,7 @@ export class TDStyle  {
         var aa=[0,0,0,0]
         for (var i = 0; i < this.bitmapData.width; i++) {
             for (var j = 0; j < this.bitmapData.height; j++) {
-                this.bitmapData.setPixel(i,j,[0,0,0,i/(this.bitmapData.width-1)*100])
+                this.bitmapData.setPixel(i,j,[0,0,0,i/(this.bitmapData.width-1)*50])
             }
         }
         this.bitmapData.upDate()
@@ -20,7 +20,7 @@ export class TDStyle  {
 
         for (var i = 0; i < this.bitmapData.width; i++) {
             for (var j = 0; j < this.bitmapData.height; j++) {
-                this.bitmapData.setPixel(i,j,[0,0,0,(1-i/(this.bitmapData.width-1))*100])
+                this.bitmapData.setPixel(i,j,[0,0,0,(1-i/(this.bitmapData.width-1))*50])
             }
         }
         this.bitmapData.upDate()
@@ -29,9 +29,46 @@ export class TDStyle  {
         trace("!!!!");
 
 
+        this.arrStyle=[
+            {color:"#67777c",key:"s1"},
+            {color:"#aa8196",key:"s2"},
+            {color:"#c3cbbf",key:"s3"},
+            {color:"#ff0000",key:"s4"},
+            {color:"#00ff00",key:"s5"}
+        ]
 
+        this.objStyle={}
+        for (var i = 0; i < this.arrStyle.length; i++) {
+            this.objStyle[this.arrStyle[i].key]=this.arrStyle[i]
+        }
+
+
+        this.getSpan=function(key){
+            var s='<span style="color:'+this.objStyle[key].color+'">';
+
+            return s
+        }
         
 /*
+
+.s1 {
+    color: #67777c 
+}
+.s2 {
+    color: #aa8196 
+}
+.s3 {
+    color: #c3cbbf 
+}
+.s4 {
+    color: #ff0000
+}
+.s5 {
+    color: #00ff00
+}
+
+
+
         var style = document.createElement("SPAN");
         //style.type = 'text/css';
         style.type = `..s1 {

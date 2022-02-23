@@ -1,4 +1,3 @@
-
 import { MZBlok } from '../mozg/MZBlok.js';
 import { TDStyle } from './TDStyle.js';
 export class CodeText extends DCont {
@@ -15,7 +14,7 @@ export class CodeText extends DCont {
 
         
         this.otstup=2;
-        this.otstup1=10;
+        this.otstup1=5;
         this.fontSize=12
         this.otn=50;
         this.pros=0.1
@@ -40,11 +39,46 @@ export class CodeText extends DCont {
             this.dCont=new DCont(); 
 
             this.panel=new DPanel(this.dCont, 0);
+            this.panel.boolLine=false
+
+
+
+            this.dCT=new DCont(this.panel);
+            this.dCT1=new DCont(this.dCT);            
+            this.dCT.div.style.clip = "rect(0px 100px 100px 0px)";  
+
+
+            this.dT= document.createElement('div');
+            this.dT.style.position = 'fixed';
+            this.dT.style.top = '0px';
+            this.dT.style.left = '0px';
+            this.dT.style.width=(this.otn-20)+"px"
+            this.dT.style.height="300px"        
+            this.dT.style.padding="0px"   
+            this.dT.style.textAlign = 'right';       
+            this.dT.contentEditable =  "true";
+            this.dT.style.fontSize =  this.fontSize+'px';
+            this.dT.style.fontFamily = "Montserrat";
+            this.dT.style.display="inline";
+            this.dT.style.whiteSpace="pre-wrap"
+            this.dT.style.pointerEvents = 'none';
+            this.dCT1.div.appendChild(this.dT);
+
+
+
+
+
+
+
+
+
+
 
             this.dCText=new DCont(this.panel);
             this.dCText1=new DCont(this.dCText);
             this.dCText.x= this.otn;
-            this.dCText.div.style.clip = "rect(0px 100px 100px 0px)";
+            this.dCText.div.style.clip = "rect(0px 100px 100px 0px)";  
+
 
             this.dText= document.createElement('div');
             this.dText.style.position = 'fixed';
@@ -52,7 +86,7 @@ export class CodeText extends DCont {
             this.dText.style.left = '0px';
             this.dText.style.width="300px"
             this.dText.style.height="300px"        
-            this.dText.style.padding="3px"        
+            this.dText.style.padding="0px"        
             this.dText.contentEditable =  "true";
             this.dText.style.fontSize =  this.fontSize+'px';
             this.dText.style.fontFamily = "Montserrat";
@@ -61,8 +95,17 @@ export class CodeText extends DCont {
             this.dCText1.div.appendChild(this.dText);
 
 
+
+            this.dScrollBarV=new DScrollBarV(this.dCont,0,0,function(){
+                self.dragV(this.value)
+            })
+          
+            this.dScrollBarV.panel.boolLine=false
+            this.dScrollBarV.startAlpha=0.25;
+            this.dScrollBarV.sahAlpha=0.25;
+            this.dScrollBarV.but.alpha=this.dScrollBarV.startAlpha;
        
-            this.dScrollBarH=new DScrollBarH(this.dCont,this.otn,0,function(){
+            this.dScrollBarH=new DScrollBarH(this.dCont,this.otstup1,0,function(){
                 self.dragH(this.value)
             })
             this.dScrollBarH.height=this.otstup1;
@@ -70,16 +113,16 @@ export class CodeText extends DCont {
             this.dScrollBarH.panel.color=dcmParam._color
             this.dScrollBarH.panel.alpha=0.5
 
-
+            this.dScrollBarH.boolOf=true;
+            this.dScrollBarH.colorffset=dcmParam._color1
+            this.dScrollBarH.offsetHit=this.otstup1//this.otstup
 
 
           
-            this.dScrollBarV=new DScrollBarV(this.dCont,0,0,function(){
-                self.dragV(this.value)
-            })
+           
 
             this.dCText2=new DCont();
-            
+            this.dCText2_1=new DCont(this.dCText2);
             this.divLit= document.createElement('div');
             this.divLit.style.position = 'fixed';
             this.divLit.style.top = '0px';
@@ -94,12 +137,12 @@ export class CodeText extends DCont {
             this.divLit.style.whiteSpace="pre-wrap"
             this.divLit.style.pointerEvents = 'none';
 
-            this.dCText2.div.appendChild(this.divLit);
+
+            this.dCText2_1.div.appendChild(this.divLit);
             this.dCText2.div.style.clip = "rect(0px 100px 100px 0px)";
             this.dScrollBarV.panel.add(this.dCText2);
-            this.dScrollBarV.panel.boolLine=false
 
-            this.dScrollBarV.but.alpha=0.1;
+           
 
 
             this.image=new DImage(this.dCText,0,0,tdStyle.lineLink,function(){
@@ -137,8 +180,8 @@ export class CodeText extends DCont {
         this.dragV=function(v){//0**100
             var yy=(self.dScrollBarV.height-self.dScrollBarV.heightContent)*v/100         
             self.dCText1.y= yy;
+            self.dCT1.y= yy;
             self.dScrollBarV.value=v;
-
         }
 
 
@@ -176,9 +219,31 @@ export class CodeText extends DCont {
 
         this.dtagText = function(){
 
+
             this.dText.innerHTML = this.mzBlok.mzbText.textDrag.text; 
-            this.divLit.innerHTML = this.mzBlok.mzbText.textDrag.text;            
+            this.divLit.innerHTML = this.mzBlok.mzbText.textDrag.text;
+
+            
+
+               
+     
+
+
+            var kk=this.mzBlok.mzbText.array.length
+            var s=tdStyle.getSpan("s1")         
+            for (var i = 0; i < kk; i++) {
+                s+=""+(i+1)+"\r";
+            }
+            s+='</span>'
+
+            this.dT.innerHTML=s
+
             this.dtagText2();
+            this.dragH(0) 
+
+            
+
+
         } 
 
 
@@ -188,11 +253,17 @@ export class CodeText extends DCont {
             if(this.mzBlok==undefined)return
             this.image.height= this._height;   
 
-            this.dScrollBarV.x=this._width*(1-this.pros)-this.otstup;
             this.dScrollBarV.width=this._width*this.pros;
+            this.dScrollBarV.x=this._width-this.dScrollBarV.width;
             
+            var kk=this.mzBlok.mzbText.array.length*(this.fontSize+3);
 
-            this.dScrollBarV.heightContent=this._height+this.mzBlok.mzbText.array.length*this.fontSize;  
+            this.dScrollBarV.heightContent=kk+this._height-(this.fontSize+3)*5; 
+
+            var hh=this.mzBlok.mzbText.array.length*(5)
+            var s=hh/this.dScrollBarV.heightContent
+            trace("==",s,kk,hh)
+            this.dCText2_1.scale=s
 
 
 
@@ -205,9 +276,10 @@ export class CodeText extends DCont {
             var hh=this._height-this.otstup
             this.dCText.div.style.clip = "rect(0px "+ww+"px "+hh+"px 0px)";
 
-            this.dScrollBarH.y=this._height-this.otstup1-this.otstup;
-            this.dScrollBarH.width=ww;
-            this.dScrollBarH.widthContent=this.mzBlok.mzbText.maxSim*this.fontSize*0.56;   
+
+            this.dScrollBarH.y=this._height-this.otstup1*2//-this.otstup;
+            this.dScrollBarH.width=this._width-this.otstup1*2;
+            this.dScrollBarH.widthContent=this.mzBlok.mzbText.maxSim*this.fontSize*0.56+ this.dScrollBarV.width+ this.otn 
 
             if(this.dScrollBarH.width>this.dScrollBarH.widthContent){
                 this.dScrollBarH.visible=false
@@ -220,10 +292,16 @@ export class CodeText extends DCont {
             }else{
                 hhh=this._height;               
             }
-            this.dScrollBarV.height=hhh       
-            this.image1.height= hhh;   
+
+            this.dScrollBarV.height=this._height      
+            this.image1.height= this._height; 
+
 
             this.dCText2.div.style.clip = "rect(0px "+(this.dScrollBarV.width-this.otstup)+"px "+hhh+"px 0px)";
+            this.dT.style.height=this.mzBlok.mzbText.array.length*this.fontSize+"px"
+            this.dCT.div.style.clip = "rect(0px "+(this.otn)+"px "+hhh+"px 0px)";
+           
+
            // this.dCText2.div.style.clip = "rect(0px "+(ww/2)+"px "+hhh+"px 0px)";              
         }
 
