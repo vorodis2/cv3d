@@ -296,7 +296,10 @@ export class MSBlok  {
             if(this.sizeWin)this.sizeWin(this.panel.width,this.panel.height)
 
         }
-        this.sizeWin = undefined
+        this.sizeWin = undefined;
+
+        this.funActive=undefined;
+
 
         var w,h,s;
         this.sizeWindow = function(_w,_h,_s){  
@@ -319,6 +322,7 @@ export class MSBlok  {
                 if(this.button1)this.button1.color=dcmParam.color
                 this.par.dCont.remove(this.dCont)
             }
+            if(this.funActive)this.funActive(this._active)
             this.draw()    
         }
     }

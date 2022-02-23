@@ -73,6 +73,9 @@ export class MVerh  {
     }
 }
 
+///////////////////////////////////////
+////////////////////////////////////
+
 export class MVStart {
     constructor(par, fun) {         
         this.type="MVStart";
@@ -254,9 +257,180 @@ export class MVStart {
     }
 }
 
+///////////////////////////////////////
+////////////////////////////////////
+
+import { SwitchPage } from '../../component/ui/SwitchPage.js';
+
+export class MVVGallery  {
+    constructor(par, fun) {         
+        this.type="MVVGallery";
+        var self=this;
+        this.par=par;
+        this.fun=fun;
+        this.param=this.par.param;
+        this._active=false;
+
+        //Кнопочка запоменающеяся без иницилизации
+        this.init=function(){
+            this.par.window
+            this.dCont=new DCont(this.par.window)
+            this.dCont.x=this.par.window.width
+            
+            //new DPanel(this.par.window,this.par.window.width)
+            this.gallery=new GalleryInfo(this.dCont,0,0,function(){
+
+            },this);
+         
+
+            this.gallery.y=0;
+            this.gallery.width=400;
+            this.gallery.height=400;
+            this.gallery.kolII=1
+            this.gallery.widthPic=this.gallery.width-this.gallery.otstup*2;
+            this.gallery.heightPic=64;  
+
+            this.switchPage=new SwitchPage(this.dCont,1,function(s,p){
+                trace(s,p)
+            },this.param)
+            this.switchPage.dCont.y=this.gallery.height
+
+
+            mhbd.getKeyList("info",function(e){
+                trace("##############",e)
+                self.setArr(e)
+            })
+
+
+        }
+
+        this.setArr=function(arr){
+            var a=[]
+
+            for (var i = 0; i < 5; i++) {
+                a[i]=arr[i]
+            }
+            
+            this.gallery.start(a)
+            this.switchPage.kol=10
+            this.switchPage.index=2
+        }
+
+        this.init()
+    }
+}
 
 
 
+
+export class GalleryInfo extends DGallery {
+    constructor(dCont, x, y, fun, par) { 
+        super(dCont, x, y, fun); 
+        this.par =  par  
+
+        this.type="GalleryMani";
+        dcmParam.addFunNotActivDiv(this.div);
+        this.createZamen=function(){            
+            var r=new BoxInfo(this.content, 0, 0, this.downBtn, this);  
+            r.whPic=this.whPic;  
+            r._widthPic = this._widthPic; // elements width
+            r._heightPic = this._heightPic; // elements height    
+            return r
+        }
+
+
+    }
+}
+
+
+export class BoxInfo extends DBox {
+    constructor(dCont, x, y, fun, par) { 
+        super( dCont, x, y, fun);                
+        this.par=par
+        var self=this;
+
+        
+
+
+
+        var ss
+        this.draw = function () {          
+           /* ss = (this._width - this._otstup * 2) / this.image.picWidth;
+            if (ss > (this._height - this._otstup * 2) / this.image.picHeight)ss = (this._height - this._otstup * 2) / this.image.picHeight;           
+            this.image.x = 0;
+
+
+            this.image.width=this.image.picWidth/2//60//this.image.picWidth*ss;
+            this.image.height=this.image.picHeight/2//60//this.image.picHeight*ss;
+
+
+            for (var i = 0; i < this.aLabel.length; i++) {
+                this.aLabel[i].x=this._heightPic+2
+            }
+            if(this.debag)this.aLabel[4].x=180+52;
+
+            this.label2.x = this._widthPic-120;
+            this.label3.x = this._widthPic-10-110; */           
+            if (this.postDraw) this.postDraw();
+        };/**/
+
+
+
+
+
+
+
+
+        this.startLoad = function (_obj) {
+           
+            this.object = _obj;
+            this.image.link = mhbd.getLink(this.object.icon);
+            this.image.visible = true;
+            this.label.text=this.object.ru; 
+            this.label.visible = true;
+           /* var link="not.png";
+            this.image.link = mhbd.getLink(this.object[2].icon);
+            this.image.visible = true;           
+
+            this.label2.text="x"+this.object[1];
+            this.label3.text=Math.round(this.object[2].price*this.object[1])+" "+this.simvol;
+
+            this.aLabel[0].text=this.object[2].art;
+
+            this.aLabel[1].text=this.object[2][this.languages.key];
+
+            this.aLabel[2].text=this.object[2].width+"x"+this.object[2].height+"x"+this.object[2].depth+"мм"
+            this.aLabel[3].text=this.object[2].price+this.par.simvol;
+
+            if(this.debag==true){
+                
+                this.aLabel[4].text = this.object[6][self.languages.key]+" : " +this.object[4];           
+                this.bTuk.text="id: " +this.object[3]
+                this.bTuk1.text="tov: "+this.object[0]
+
+                if(this.object[5]){
+                    this.bTuk2.text="3d: "+this.object[5]
+                    this.bTuk2.visible=true;
+                }else{                    
+                    this.bTuk2.visible=false;
+                } 
+            }else{                
+                if(this.object[6]){
+                    this.aLabel[4].text = "" +this.object[6][self.languages.key];  
+                }                
+            }
+            
+            
+            */
+            this.draw();
+            self.funLoad();          
+        }    
+    }
+}
+
+
+///////////////////////////////////////
+////////////////////////////////////
 export class MVVunor  {
     constructor(par, fun) {         
         this.type="MVVunor";
@@ -273,8 +447,12 @@ export class MVVunor  {
             if(this.window!==undefined)return;
 
             this.window = new DWindow(this.mvbBlok.dCont)
-            this.window.width=400;
-            
+            this.window.width=400; 
+
+          
+
+
+           
             this.window.hasMinimizeButton=false;
             this.window.dragBool=false;  
 
@@ -325,6 +503,10 @@ export class MVVunor  {
             this.window.width=this.window1.width+this.window1.x+this.param.otstup;
 
             this.button.x= this.window.width-30;
+
+            this.gallery=new MVVGallery(this,function(s,p){
+
+            })
 
 
             mhbd.getKeyId("info",10,function(e){                
@@ -734,7 +916,8 @@ export class MVVunor  {
 
 
 
-
+///////////////////////////////////////
+////////////////////////////////////
 
 
 

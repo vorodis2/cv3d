@@ -37,6 +37,9 @@ export class MozgClass  {
             this.lhInfo=lhInfo
             this.tipe=lhInfo.type;
 
+
+
+
             this.line=lhInfo.o;
             this.line1=lhInfo.o1;
 
