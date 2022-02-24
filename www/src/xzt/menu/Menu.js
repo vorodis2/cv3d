@@ -13,14 +13,14 @@ import { MFolders } from './MFolders.js';
 export class Menu  {
   	constructor(par, fun) {  		
   		this.type="Menu";
-  		var self=this;
+        var self=this;
         this.par=par;
         this.fun=fun;
         this.param=this.par.param;
 
         this.dCont=new DCont(par.dCont); 
         this.array=[]
-
+        //бля
 
         this.init = function(){  
 
@@ -38,8 +38,9 @@ export class Menu  {
             this.array[0]=this.mShtora=new MShtora(this,function(s,p){
 
             })
-            this.array[1]=this.mFolders=new MFolders(this,function(s,p){
+            this.array[1]=this.mFolders=new MFolders(this,function(s,p,p1){                
 
+                self.fun(s,p,p1) 
             })
             this.array[2]=this.mVisi3d=new MVisi3d(this,function(s,p){
 
@@ -71,6 +72,11 @@ export class Menu  {
 
             this.dCont.remove(mCPodskazka.dCont)
             this.dCont.add(mCPodskazka.dCont)
+        }
+
+
+        this.setSob = function(_s,_p,_p1){  
+
         }
 
 

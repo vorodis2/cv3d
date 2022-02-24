@@ -15,17 +15,9 @@ export class MFolders  {
         this._active=false;
 
         
-       /* this.input=new DInput(this.dCont,this.param.otstup,this.param.otstup,"../../src/xzt/Main.js",function(){
 
-        })
-        this.button=new DButton(this.dCont,this.param.otstup,this.param.otstup,"start",function(){
-            
-            var b = self.par.par.mozg.setJSKoren(self.input.text)
-        })
-        this.button.width=32*/
 
-        this.panel=new DPanel(this.dCont,this.param.otstup,this.param.otstup)
-        this.panel.height=32+this.param.otstup*2
+       
 
 
         this.mozg=this.par.par.mozg
@@ -39,20 +31,6 @@ export class MFolders  {
                 var oo=JSON.parse(date)
                 trace(oo,date)
             })*/
-         /*
-
-         
-            this.threeImp.setObj(this.mozg.klass,"array","name")
-            return
-            var a=[]
-            for (var s in this.mozg.kBlok.objectClass) {
-                if(this.mozg.kBlok.objectClass[s].active==true)a.push(this.mozg.kBlok.objectClass[s])
-            }
-            var oo={name:"корень",array:a}
-            this.threeImp.setObj(oo,"array","name")
-            */
-
-            //this.setMOZBlok(this.mozg.klass)
         }
 
     
@@ -64,25 +42,126 @@ export class MFolders  {
         this.threeImp=undefined; 
 
 
-      
+        this.getStr=function(otr){
+            var ss=otr.title+"|"            
+            if(otr.parPod){                
+                ss+=this.getStr(otr.parPod)
+            }
+            return ss
+        }
+
+        this.startOpen=[]
+        this.setStr=function(s, b){
+            
+            var p=-1
+            for (var i = this.startOpen.length - 1; i >= 0; i--) {
+                if(this.startOpen[i]==s){                     
+                    if(b==false){
+                        p=i
+                        break;
+                    }else{ 
+                                               
+                        p=-11
+                        this.startOpen.splice(i,1)
+                    }
+                }
+            }
+            if(p==-1){
+                this.startOpen.push(s)
+            }            
+            localS.object["p_MFolders_startOpen"]=this.startOpen;
+            localS.save();
+        }
+
+        this.openXZ=function(s){            
+            var a=s.split("|")
+            a.splice(a.length-1,1);
+            a.reverse();            
+            this.openXZ2(this.threeImp.arrBut,a)
+            this.threeImp.redrawThree()
+
+        }
+
+        this.openXZ2=function(aotr,arr){
+            var sTitle=arr[0]
+            var ooo=null
+            for (var i = aotr.length - 1; i >= 0; i--) {
+                if(aotr[i].title==sTitle){
+                    ooo=aotr[i]
+                    break
+                }
+            }            
+            if(ooo) {
+                ooo.isOpen=true;
+                arr.splice(0,1) 
+                if(arr.length!=0){
+                    this.openXZ2(ooo.arrBut,arr)
+                }else{
+
+                }
+            }                    
+        }
+
+        this.korUrl=function(otr){
+            var s=self.getStr(otr)
+            var a=s.split("|")
+            a.splice(a.length-1,1);
+
+            var ss=""
+            for (var i = a.length - 1; i >= 0; i--) {
+                if(i===0) ss+=a[i];
+                else ss+=a[i]+"/";
+            }
+
+            //ss.splice(ss.length-1,1);
+           // ss+=otr.title
+
+            trace(ss)
+            return ss
+        }
+
 
         this.init=function(){
             if(this.threeImp!==undefined)return
-            this.threeImp=new DTNova(this.dCont,this.param.otstup,this.param.otstup*4+32,function(){
-        
-            }) 
-            mhbd.setPHP({tip:"getFiles1",dir:"../../"},function(date){                
-                var oo=JSON.parse(date)
+            this.threeImp=new DTNova(this.dCont,this.param.otstup,this.param.otstup,function(s,p){
                 
+                if(p.arrBut.length!=0){
+                    var s1=self.getStr(p)
+                    self.setStr(s1, p.isOpen)        
+                    return
+                }
+                if(p.title.indexOf(".js")!=-1){
+                    var url=self.korUrl(p);
+                    trace("!!",p.title,s);
+                    var b=false
+                    if(s=="dblclick")b=true
+                    self.fun("openJS",url,b)
+                }
+
+                
+            })         
+            mhbd.setPHP({tip:"getFiles1",dir:"../../",arrNot:["node_modules","hlam","date"]},function(date){
+                var oo=JSON.parse(date)
+                self.openObj(oo)
             })
-            this.sizeWin()
+            this.sizeWin();
         }
+
+
+
+
+
 
         this.object=undefined
         this.openObj=function(oo){
             this.object=oo;
-            this.threeImp.setObj(oo);
-            //trace(oo)
+            this.threeImp.setObj(oo);  
+            if(localS.object["p_MFolders_startOpen"]!=undefined){
+                this.startOpen=localS.object["p_MFolders_startOpen"]
+                for (var i = 0; i < this.startOpen.length; i++) {
+                    this.openXZ(this.startOpen[i])
+                }    
+            }
         }
 
 
@@ -107,7 +186,7 @@ export class MFolders  {
                 h= _h;               
             } 
 
-            if(self.threeImp==undefined)return
+            if(self.threeImp==undefined)return            
             self.threeImp.width=w-self.param.otstup*2
             self.threeImp.height=h-self.threeImp.y-self.param.otstup
         }
@@ -199,6 +278,8 @@ export  function DTNova(dCont, _x, _y, fun){
         self.content.y=-(this.heightContent-this.height)*this.value/100;
         self.lines.y = -(this.heightContent-this.height)*this.value/100;
     });
+
+
    
     this.scrollBar.visible = false;
     this.scrollBar.width = this._heightBut/4;
@@ -253,6 +334,9 @@ export  function DTNova(dCont, _x, _y, fun){
             if(obj.arr.length>0){// если папка
                 but.isFolder=true;
                 but.arrBut=this.convertArr(obj.arr);
+                for (var i = 0; i < but.arrBut.length; i++) {
+                    but.arrBut[i].parPod=but;
+                }
             } 
         }
               
@@ -264,9 +348,11 @@ export  function DTNova(dCont, _x, _y, fun){
     this.naId=-1
     //Отловка события нажатия, наведения курсора и когда курсор убирается
     this.mouseEvent = function(obj){ 
-        //Нажатие клавиши     
-        if(obj.sobEvent=="mouseDown"){
-            if(this.fun!=undefined) this.fun(obj.obj);
+
+
+        if(obj.sobEvent=="mouseDown" || obj.sobEvent=="dblclick"){
+
+            if(this.fun!=undefined) this.fun(obj.sobEvent,obj);
             this._activId = obj.id;
             //Открытие/закрытие папки
             this.openCloseObj(obj, !obj.isOpen); 
@@ -323,7 +409,9 @@ export  function DTNova(dCont, _x, _y, fun){
         }
         var ot = new DObjectThree(this.content, 0, 0, function(){
             self.mouseEvent(this);
+
         },this);
+
       
         ot.three = this;
         this.bufferOt.push(ot);
@@ -340,14 +428,6 @@ export  function DTNova(dCont, _x, _y, fun){
     //Отрисовка всего дерева
     this.drawAll = function (){
         this.drawElement(this.arrBut);
-       /* this.graphics.clear();
-        this.graphics.beginFill(this.color3);
-        this.graphics.drawRect(0,0, this._width, this._height);
-
-        this.graphCover.clear();
-        this.graphCover.beginFill(pl102.color);
-        this.graphCover.drawRect(0,0,this._width,this._height);
-        this.graphCover.endFill();*/
 
         this.scrollBar.x = this._width - this.scrollBar.width;
         this.scrollBar.height=this._height;
@@ -561,9 +641,8 @@ export  function DTNova(dCont, _x, _y, fun){
     var yyy=0
     this.mousemove=function(e){         
         if(self.dragActiv==false)return;
-        if(self.scrollBar.visible == false)return;
-        
-            hhh=(self.scrollBar.heightContent-self.scrollBar.height)
+        if(self.scrollBar.visible == false)return;        
+        hhh=(self.scrollBar.heightContent-self.scrollBar.height)
            
      
 
@@ -620,67 +699,52 @@ export  function DTNova(dCont, _x, _y, fun){
         this.key=_key
         if(_key==undefined)this.key="children";
         this.key1=_key1
-        if(_key1==undefined)this.key1="name";
-
-        this.arrObj=this.getArr(_o,this.key,this.key1)
-
-        
+        if(_key1==undefined)this.key1="name";        
+        this.arrObj=this.getArr(_o,this.key,this.key1) 
         this.setArr(this.arrObj);
     }
 
-    this.getArr=function(_o,_key,_key1){
+    this.getArr=function(_o,_key,_key1){        
         var a=[]
-
-
-        return a;
-
-       /* var a=[]
-        a[0]={}
-        a[0].text=_o[_key1]
-        a[0].obj=_o
-
-        if(_o[_key]!=undefined){
-            if(_o[_key].length!=undefined){
-                if(_o[_key].length!=0){
-                    a[0].arr=[]
-                    for (var i = 0; i < _o[_key].length; i++) {
-                        a[0].arr[i]=this.getArr(_o[_key][i],_key,_key1)[0]
-                    }
-                }
+        for (var i = 0; i < _o.length; i++) {
+            a[i]={}            
+            if(typeof _o[i] == "string"){
+                a[i].text=_o[i];
+            }else{
+                for(var s in _o[i]){
+                    a[i].text=s;
+                    a[i].obj=_o[i];                    
+                    a[i].arr=this.getArr(_o[i][s]);
+                    break
+                }                
             }
         }
-        return a;*/
+        var a1=[]
+        var a2=[]
+        for (var i = 0; i < a.length; i++) {
+            if(a[i].arr){
+                a1.push(a[i])
+            }else{
+                a2.push(a[i])
+            }
+        }
+        a1.sort(compareNumbers)
+        a2.sort(compareNumbers)
+        var a3=[]
+        for (var i = a1.length-1; i >=0; i--) {
+            a3.push(a1[i])
+        }
+
+        for (var i = a2.length-1; i >=0; i--) {
+            a3.push(a2[i])
+        }
+
+        return a3;
     }
 
-/*    this.getArr=function(_o,_key,_key1){
-        var a=[]
-        a[0]={}
-        a[0].text=_o[_key1]
-        a[0].obj=_o
-
-        if(_o[_key]!=undefined){
-            if(_o[_key].length!=undefined){
-                if(_o[_key].length!=0){
-                    a[0].arr=[]
-                    for (var i = 0; i < _o[_key].length; i++) {
-                        a[0].arr[i]=this.getArr(_o[_key][i],_key,_key1)[0]
-                    }
-                }
-            }
-        }
-        return a;
-    }*/
-
-
-
-
-
-    var startJson = '[{"text":"Папка 1","arr":[{"text":"Вложенный файл 1"},{"text":"Вложенный файл 2"}]}]';
-    //var a=[{text:"Папка 1", arr:[{text:"Вложенный 1"},{text:"Вложенный 2"},{text:"Вложенный 2"},{text:"Папка 1", arr:[{text:"Вложенный 1"},{text:"Вложенный 2"},{text:"Вложенный 2"} ]} ,{text:"Вложенный 2"}]}];
-    var a=[{text:"Папка 1", arr:[{text:"Вложенный 1"},{text:"Вложенный 2"},{text:"Вложенный 2"}]}]
-    
-    this.setArr(a);
-    this.updateThree();
+    function compareNumbers(a, b) {
+        return b.text-a.text;
+    }
 }   
 DTNova.prototype = Object.create(DCont.prototype);
 DTNova.prototype.constructor = DTNova;
@@ -703,7 +767,11 @@ Object.defineProperties(DTNova.prototype, {
             this._width = value;
             this.scrollBar.x=value-this.scrollBar.width;
             this.div.style.clip = "rect(1px "+this._width+"px "+this._height+"px 0px)"; 
-            
+            for (var i = 0; i < this.bufferOt.length; i++) {
+                if (this.bufferOt[i].inited) {
+                    this.bufferOt[i].width = this._width;
+                }
+            }
             this.redrawThree();
         },
         get : function() { return this._width; }
@@ -780,7 +848,8 @@ function DObjectThree(cont, _x, _y, fun, par){
     var self = this;
     DCont.call(this);   
     this.type = 'DObjectThree'; 
-    cont.add(this);                    
+    cont.add(this);
+    this.parPod=null                    
     
     this.par=par
 
@@ -804,8 +873,10 @@ function DObjectThree(cont, _x, _y, fun, par){
     this.isOpen=false; 
     this.isIndexOver = false;
     this.three = null;
-    this.inited = false;
+    this.inited = false;    
+    this.content = undefined; 
     this.init = function () {
+        if(this.content!==undefined)return
         this.content = new DCont();
         this.add(this.content);
 
@@ -813,38 +884,23 @@ function DObjectThree(cont, _x, _y, fun, par){
         this.panel=new DPanel(this.content,0,0)
         this.panel.boolLine=false
 
-    /* this.graphicsM = new PIXI.Graphics(); 
-        this.graphicsM.interactive = true;
-        this.graphicsM.buttonMode = true;
-
-        // this.imgEye = new PLImage(this,0,0);
-        
-        this.graphic = new PIXI.Graphics(); 
-        this.graphic1 = new PIXI.Graphics();
-        this.graphicsM.addChild(this.graphic);*/
+    
         
         this.icon_type=2;
-        this.icon=new DIconThree(this);
-
-        
-        /*this.graphicsM.addChild(this.icon.content);
-        this.graphicsM.addChild(this.graphic1);
-        this.addChild(this.graphicsM);*/
-
+        this.icon=new DIconThree(this); 
         this.panel1=new DPanel(this,0,0)
-        this.panel1.alpha=0;
-        //this.panel1.color="#ff0000"
-
-        this.panel.height=this.panel1.height=this._height
-
-        this.label = new DLabel(this.content,this.x, this.y, this.title);
+        this.panel1.alpha=0; 
+        this.panel.height=this.panel1.height=this._height;
+        this.label = new DLabel(this.content,this.x, this.y, this._title);
         this.label.y = (this._height - this.label.height) / 2;
+        this.label.div.style.pointerEvents="none";
+        this.panel.height=this.panel1.height=this._height;
+        this.panel.width=this._width   
+        this.panel1.width=this._width
 
-        this.label.div.style.pointerEvents="none"; 
-
+        this.label.width=this._width*2
 
         this.sobEvent = "null";
-
         this.mouseOver = function (e) {
             self.sobEvent="mouseOver";
             if(self.fun!=undefined)self.fun();
@@ -855,16 +911,27 @@ function DObjectThree(cont, _x, _y, fun, par){
             if(self.fun!=undefined)self.fun();
         };
 
+
+        var date=new Date()
+        var date1
         this.mouseDown = function (e) {
-            self.sobEvent="mouseDown"; 
+            self.sobEvent="mouseDown";
+            if(date==undefined)date=new Date()
+
+            date1=new Date()
+            
+            var s= date1.getTime() - date.getTime()
+            date=date1
+
+            if(s<500)self.sobEvent="dblclick";
             if(self.fun!=undefined)self.fun();
         };
 
-        
 
         
 
-        if(dcmParam.mobile==false){         
+        if(dcmParam.mobile==false){      
+            
             this.panel1.div.addEventListener("mousedown", this.mouseDown);
             this.panel1.div.addEventListener("mouseout", this.mouseOut);
             this.panel1.div.addEventListener("mouseover", this.mouseOver);
@@ -884,6 +951,7 @@ function DObjectThree(cont, _x, _y, fun, par){
 
     this.drawElement = function () {
         if (!this.inited) {
+            
             this.init();
             this.inited = true;
         }
@@ -892,6 +960,9 @@ function DObjectThree(cont, _x, _y, fun, par){
             this.setInfo();
             this.correctInfo = true;
         }
+
+        if(this.icon==undefined)return
+
 
         this.icon.isLast=this.isLast;
         this.icon.level=this.level;
@@ -915,45 +986,15 @@ function DObjectThree(cont, _x, _y, fun, par){
             this.label.fontSize=s
         }else{
             this.label.fontSize=16
-        }
-        
-        //this.rect.width/=this.worldTransform.a;
-        //this.rect.height/=this.worldTransform.a;
+        }       
+
         this.label.y = (this._height - this.rect.height) / 2;
-
-
-        /*this.graphic.clear();
-        this.graphic.beginFill(this._color);
-        this.graphic1.clear();
-        this.graphic1.beginFill(0,0);*/
-        // this.panel.width=this._width
         this.panel.x=this.icon.but._width*2+3+this.otstup;
         this.label.x = this.icon.but._width*2+this.otstup*2;
         this.panel.color=this._color;
         this.panel.width=this._width
-
-
-
-
         this.panel1.x=-this.x
         this.panel1.width=this.par.width
-
-
-
-        // if(this.isFolder){
-        //     this.panel.x=this.icon.but._width*2+3+this.otstup
-        //    /* this.graphic.drawRect(this.icon.but._width*2+3+this.otstup,0, this._width, this._height);
-        //     this.graphic1.drawRect(0,0,this.icon.but._width*2+this.otstup, this._height);*/
-        //     this.label.x = this.icon.but._width*2+this.otstup*2;
-
-        // }
-        // else{
-        //     this.panel.x=this.icon.but._width+3+this.otstup
-        //     //this.graphic.drawRect(this.icon.but._width+this.otstup,0, this._width, this._height);
-        //    // this.graphic1.drawRect(0,0,this.icon.but._width+this.otstup, this._height);
-        //     this.label.x = this.icon.but._width+this.otstup*2;
-        // }
-
     }
 }
 DObjectThree.prototype = Object.create(DCont.prototype);
@@ -963,7 +1004,8 @@ Object.defineProperties(DObjectThree.prototype, {
         set : function(value){
             if(value==this._title)return;
             this._title = value; 
-            this.label.text = this._title;
+            if(this.label)this.label.text = this._title;
+            
         },
         get : function() { return this._title; }
     },
@@ -971,8 +1013,12 @@ Object.defineProperties(DObjectThree.prototype, {
         set : function(value){
             if(value==this._width)return;
             this._width = value; 
-            this.panel.width=this._width   
-            this.panel1.width=this._width
+            if(this.panel){
+                this.panel.width=this._width; 
+                this.panel1.width=this._width;
+                this.label.width=this._width*2;
+            }
+         
 
             
 
@@ -983,7 +1029,10 @@ Object.defineProperties(DObjectThree.prototype, {
         set : function(value){
             if(value==this._height)return;
             this._height = value;
-            this.panel.height=this.panel1.height=this._height
+            if(this.panel){
+                this.panel.height=this.panel1.height=this._height
+            }
+            
             
         },
         get : function() { return this._height; }

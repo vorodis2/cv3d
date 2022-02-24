@@ -51,6 +51,7 @@ export class MZBlok {
             for (var i = this.children.length - 1; i >= 0; i--) {
                 this.remove(this.children[i])
             }
+            this.mzbText.clear()
         } 
 
         var imp
@@ -72,8 +73,7 @@ export class MZBlok {
         }
 
 
-        this.setJS=function(s){  
-            trace(s)         
+        this.setJS=function(s){                       
             this.clear();
             self.avtoObnova.life=false
             this.link=s;
@@ -85,15 +85,15 @@ export class MZBlok {
             mhbd.setPHP({tip:"getText",dir:this.link},  function(data){                 
                 //self.avtoObnova.start();
                 self.text=data; 
-                self.parsing(data);                             
+                self.parsing();                             
             })
         }
 
         var a
-        this.parsing=function(data){
+        this.parsing=function(){
             this.aLint= this.link.split("/");
             this.name=this.aLint[this.aLint.length-1]
-            self.mzbText.set(data);          
+            self.mzbText.set(self.text);          
             this.openLoad=true;           
             this.fun("load",this);      
         }

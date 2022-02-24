@@ -196,7 +196,7 @@
 
 
 
-    function getDirs1($dir,$sah){
+    function getDirs1($dir,$sah, $arrNot){
         //cleanerDir($dir."/");
         
         $str='[';
@@ -210,16 +210,41 @@
             }
             $b=0;
             foreach($objs as $obj) {
+                $bbb=1;
                 $b4=0;
                 $b=$b+1;
                 $s=basename($obj);
+
+                
+
+                
                 if($b!=1)$str=$str.','; 
 
                 if(is_dir($obj."/")){
-                    $str=$str.'{"'.$s.'":'.getDirs1($obj, $sah+1).'}';
+                    if(isset($arrNot)){
+                        $cc=count($arrNot);
+                        for ($i = 0; $i <= $cc; $i++) {
+                            
+                            if($arrNot[$i]==$s){
+                                $bbb=0;
+
+                            };
+                        };
+                    };
+
+                    if($bbb==1){
+                        $str=$str.'{"'.$s.'":'.getDirs1($obj, $sah+1,$arrNot).'}';
+                    }else{
+                        $str=$str.'{"'.$s.'":["ERROR Load Big"]}';
+                    }
+
+
                 }else{
                    $str=$str.'"'.$s.'"'; 
-                }                 
+                }
+                
+
+                                
             }
 
         }
@@ -234,8 +259,7 @@
 
     if($tip == "getFiles1"){  
 
-        $ff = getDirs1($_REQUEST['dir'],0);
-        
+        $ff = getDirs1($_REQUEST['dir'],0,$_REQUEST['arrNot']);        
         echo $ff;//$ff; 
         return;
         

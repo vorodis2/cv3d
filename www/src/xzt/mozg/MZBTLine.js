@@ -31,11 +31,13 @@ export class MZBTLine{
         var n,n1,ss
         this.set=function(s){
             this.active=true;
+            trace(this.active," ",s)
            // 
             this.text=s;
             this.array.length=0
             this.array[0]=this.text;            
             this.parse( this.array,this.arrSim ); 
+            
             this.kontSah=this.getPos(this.array,this.arrSim,true); 
             this.korStatuc()
          

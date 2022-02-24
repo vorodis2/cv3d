@@ -9,7 +9,7 @@ export class MZBText  {
         var self=this;
         this.par=par;
         this.fun=fun;
-        this.arrSim=[" ","\t","\r","//","/*","*/",";","{","}","."];
+        this.arrSim=[" " ,"\t", "\r", "//", "/*", "*/", ";", "{", "}", "."];
         this.array=[];
         this.arrayCeh=[]; 
 
@@ -330,6 +330,7 @@ export class MZBText  {
         this.boolCom=1;
         this.set=function(s){
             this.text = s;
+            trace(s)
             var bool=true;
             var a=s.split("\n");
             this.maxSim=0

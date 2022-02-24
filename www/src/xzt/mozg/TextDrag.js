@@ -33,30 +33,29 @@ export class TextDrag  {
         }
 
         this.dLine=function(line){
-            line.textSpan='';            
-            for (var j = 0; j < line.array.length; j++) {                               
+            line.textSpan=''//<span class="s2">'+line.text+'</span>';  
+            line.textSpan='<span style= "color:#ff0000" "tab-size: 10">    '+line.text+'</span>';  
+            
+           /* for (var j = 0; j < line.array.length; j++) {                               
                 if(line.arrBo[j]==0){
-                    this.text+='<span class="s1">'+line.array[j]+'</span>';
+                    line.textSpan+='<span class="s1">'+line.array[j]+'</span>';
                 }else{
                     if(this.isStrInArr(line.array[j],this.arr_s2)==true){
-                        this.text+='<span class="s2">'+line.array[j]+'</span>';
+                        line.textSpan+='<span class="s2">'+line.array[j]+'</span>';
                         continue
                     }
                     if(this.isStrInArr(line.array[j],this.arr_s4)==true){
-                        this.text+='<span class="s4">'+line.array[j]+'</span>';
+                        line.textSpan+='<span class="s4">'+line.array[j]+'</span>';
                         continue
                     }
-                   /* if(line.array[j]=="/t"){
-                        this.text+='<t>'+line.array[j]+'</t>';
-                        continue
-                    }*/
+                   
                     
 
 
-                    this.text+='<span class="s3">'+line.array[j]+'</span>';
+                    line.textSpan+='<span class="s3">'+line.array[j]+'</span>';
                     
                 }
-            }  
+            }  */
 
            // line.textSpan+='<br>'             
         }

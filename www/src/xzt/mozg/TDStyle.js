@@ -2,10 +2,7 @@
 export class TDStyle  {
     constructor() {
         this.type="TDStyle";
-        var self=this;  
-
-
-
+        var self=this; 
 
 
         this.bitmapData=new DBitmapData(10,1);
@@ -25,8 +22,6 @@ export class TDStyle  {
         }
         this.bitmapData.upDate()
         this.lineLink=this.bitmapData.getData()
-
-        trace("!!!!");
 
 
         this.arrStyle=[

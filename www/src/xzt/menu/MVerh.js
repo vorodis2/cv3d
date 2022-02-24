@@ -307,6 +307,7 @@ export class MVVGallery  {
         this.setArr=function(arr){
             var a=[]
 
+
             for (var i = 0; i < 5; i++) {
                 a[i]=arr[i]
             }
@@ -546,8 +547,7 @@ export class MVVunor  {
             this.arrComp[3].scalePic=1;
             mhbd.getKeyId("info",7,function(e){
                 self.arrComp[3].link=mhbd.getLink(e.icon)
-                mCPodskazka.setBuuton(self.arrComp[3],e)
-                //languages.setCompObj(self.arrComp[13],e)
+                mCPodskazka.setBuuton(self.arrComp[3],e)                
             })
 
 

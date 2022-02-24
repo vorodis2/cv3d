@@ -129,13 +129,13 @@ export class MShtora  {
                 a.push(oo)              
             }
             localS.object["p_MShtora_array"]=a;
-            trace(a)
+          
             localS.save(); 
         } 
 
        if(localS.object["p_MShtora_array"]!=undefined){
             var a=localS.object["p_MShtora_array"]
-            trace(a)
+           
             for (var i = 0; i < a.length; i++) {
                 if(this.array[i]==undefined)break
                 if(a[i].tipe!=this.array[i].tipe)break                 
@@ -222,7 +222,7 @@ export class MSBlok  {
 
 
             mhbd.getKeyId(key,id,function(e){
-                trace(e)
+                
                 if(e){
                     self.button1.link=mhbd.getLink(e.icon);
                     mCPodskazka.setBuuton(self.button1,e)
@@ -291,9 +291,7 @@ export class MSBlok  {
         this.drag=function(){
 
             if(tipe=="static"){
-                this.x=sp.x-sp.xxx
-
-                trace(this.x,sp)
+                this.x=sp.x-sp.xxx             
                 this.par.draw()
                 return
             }

@@ -75,7 +75,7 @@ export class Glaf  {
 
             if(s=="openLoad"){
                 self.menu.mFolders.openLoad(p);
-                self.redactCode.openLoad()
+                self.redactCode.openLoad(p)
                 self.scane3d.setSob(s, p, p1);
             }                            
         }) 
@@ -91,13 +91,18 @@ export class Glaf  {
             }                               
         }) 
 
-        this.menu = new Menu(this, function(s, p){
+
+        this.menu = new Menu(this, function(s, p, p1){
             if(s=="visi3d"){
                 self.visi3D.intRend=1;
                 return
             } 
             if(s=="test"){                
                 self.scane3d.test();
+                return
+            } 
+            if(s=="openJS"){ 
+                self.redactCode.setSob(s, p, p1);
                 return
             } 
 
