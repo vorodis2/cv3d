@@ -32,13 +32,13 @@ export class MZBText  {
         this.textDrag = new TextDrag(this,this.sob)   
 
         var line;
-        this.craet=function(){
+        this.craet=function(b){
             if(this.arrayCeh[this.array.length]==undefined){
                 this.arrayCeh[this.array.length]=new MZBTLine(this,this.sob) 
             }
             line=this.arrayCeh[this.array.length]
-            line.idArr=this.array.length
-            this.array[this.array.length]=line          
+            line.idArr=this.array.length;
+            if(b==undefined)this.array[this.array.length]=line          
             return line;
         }
 
@@ -71,11 +71,8 @@ export class MZBText  {
                           
 
                                     }
-                                }   
-                                
-                                continue
-                                
-                                
+                                }                               
+                                continue 
                             }
 
 
@@ -91,8 +88,6 @@ export class MZBText  {
                                     if(b){                                       
                                         ac.push(this.array[ii].array[jj])
                                     }
-
-
                                     if(oo.o1.line==ii && oo.o1.sah==jj){
                                         ii=999999999
                                         jj=999999999
@@ -330,18 +325,37 @@ export class MZBText  {
         this.boolCom=1;
         this.set=function(s){
             this.text = s;
-            trace(s)
+
+            trace(this.text)
             var bool=true;
             var a=s.split("\n");
-            this.maxSim=0
+            var a1=s.split("\r");
+            if(a1.length>a.length){
+                a=a1
+                a[a.length-1]+="\r" 
+            }else{
+                a[a.length-1]+="\n" 
+            }
+               
+            
+            this.maxSim=0;
             for (var i = 0; i < a.length; i++) {                
-                lll=this.craet(a[i]);
+                lll=this.craet();
                 lll.set(a[i]);
                 if(this.maxSim<lll.kolSim)this.maxSim=lll.kolSim
-
             }
+
             //this.textDrag.drag();
-            
+            this.dragText()    
+        }
+
+        this.dragText=function(b){
+            this.maxSim=0
+            for (var i = 0; i < this.array.length; i++) { 
+                if(b==undefined)this.array[i].dragText();
+                if(this.maxSim<this.array[i].kolSim)this.maxSim=this.array[i].kolSim
+            }
+            this.textDrag.drag();
         }
 
 
@@ -350,6 +364,7 @@ export class MZBText  {
          
             this.clear();
             this.maxSim=mxbText.maxSim;
+            this.text=mxbText.text
             var l;
             
             for (var i = 0; i < mxbText.array.length; i++) { 

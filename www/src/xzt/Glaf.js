@@ -12,7 +12,7 @@ import { Mozg } from './mozg/Mozg.js';
 
 import { SceneSB } from '../libMy/visi3D/SceneSB.js'
 
-import { RedactCode } from './redactCode/RedactCode.js'
+import { RedactCode } from './mozg/redactCode/RedactCode.js'
 
 
 
@@ -75,7 +75,7 @@ export class Glaf  {
 
             if(s=="openLoad"){
                 self.menu.mFolders.openLoad(p);
-                self.redactCode.openLoad(p)
+               // self.redactCode.openLoad(p)
                 self.scane3d.setSob(s, p, p1);
             }                            
         }) 

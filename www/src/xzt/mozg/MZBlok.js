@@ -93,6 +93,8 @@ export class MZBlok {
         this.parsing=function(){
             this.aLint= this.link.split("/");
             this.name=this.aLint[this.aLint.length-1]
+
+            trace("#########",this.name)
             self.mzbText.set(self.text);          
             this.openLoad=true;           
             this.fun("load",this);      
@@ -131,8 +133,9 @@ export class MZBlok {
         ///Пускаем дальше на поиск от
         this.startImp=function(){  
             self.mzbText.korImport()       
+            return
             this.creatClass();         
-            //return
+            
             var aa,aa1;
             var sah=0;
             for (var i = 0; i < this.arrayImport.length; i++) {

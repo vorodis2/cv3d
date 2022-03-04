@@ -4,6 +4,7 @@ export class MZBTLine{
     constructor(par, fun) {   
         this.type="MZBText";
         var self=this;
+        this.uuid=dcmParam.generateRendom(2)   
         this.par=par;
         this.fun=fun;
         this._active=false;
@@ -31,21 +32,20 @@ export class MZBTLine{
         var n,n1,ss
         this.set=function(s){
             this.active=true;
-            trace(this.active," ",s)
+           
            // 
             this.text=s;
-            this.array.length=0
-            this.array[0]=this.text;            
-            this.parse( this.array,this.arrSim ); 
             
+
+        }    
+        this.dragText=function(){
+            this.array.length=0
+            this.array[0]=this.text;
+            this.parse( this.array,this.arrSim );             
             this.kontSah=this.getPos(this.array,this.arrSim,true); 
-            this.korStatuc()
-         
-
-
-           
-
-                  
+            this.korStatuc(); 
+            this.korTab();
+            this.dLine();
         }
 
         this.arrBo1=[]
@@ -57,33 +57,11 @@ export class MZBTLine{
 
             this.kolSim=0;
             this.status=1;
-            
-            for (var i = 0; i < this.array.length; i++) {
-                this.arrBo[i]=this.par.boolCom;
-                this.arrBo1[i]=1;
 
-                if(this.array[i]=="\t"){
-                    this.kolSim+=4;
-                }else{
-                    this.kolSim+=this.array[i].length
-                }
-            }
-
-            //Коментарий через слешы
-           /* n=this.getPos(this.array,["//"],false);
-            if(n!=-1){
-                for (var i = 0; i < this.array.length; i++) {
-                    if(i>=n){
-                        this.arrBo[i]=0;
-                    }else{                        
-                        if(n<this.kontSah)this.status=2;
-                    }
-                }
-            }*/
-            
-
-
-
+            var k=this.text.length;
+            var a=this.text.split("\t")
+            k+=(a.length-1)*3
+            this.kolSim=k
 
             bb=this.par.boolCom;
             for (var i = 0; i < this.array.length; i++) {
@@ -109,6 +87,135 @@ export class MZBTLine{
                 if(b==0 && this.arrBo[i]==1)this.arrBo[i]=b;                
             }
 
+            
+        }
+
+        this.arrTab=[]
+        this.arrTab2=[]
+        this.arrS=[];
+        this.doStr=''
+        this.doKol=0
+        this.korTab=function(){
+            this.arrTab.length=0;
+            this.arrTab2.length=0;
+            this.arrS.length=0;
+            let sah = 0;
+            var kkk
+            var ks=0
+            this.doStr=''
+            this.doKol=0
+            var dob=true
+            this.kolSim=0;
+            for (var i = 0; i < this.text.length; i++) { 
+                if(this.text[i]=="\t" || this.text[i]==" "){
+
+                }else{
+                    if(dob==true)this.doKol=sah
+                    dob=false
+                } 
+                if(dob==true)this.doStr+=this.text[i];    
+
+                if(this.text[i]=="\t"){                   
+                    kkk=4-sah%4;
+                    for (var j = 0; j < kkk; j++) {
+                        this.arrTab[sah]=ks//kkk
+                        this.arrTab2[sah]=kkk
+                        this.arrS.push(this.text[i])
+                        sah++;
+
+                    }
+                    ks++
+                    //sah--;
+                    continue
+                    
+                }else{
+                    
+                    
+
+                    this.arrTab[sah]=-1
+                    this.arrTab2[sah]=-1
+                    if(this.text[i]!==" "){
+                        this.arrTab[sah]=-2
+                        this.arrTab2[sah]=-2
+                    }
+                    this.arrS.push(this.text[i])
+                }
+                sah++;
+                
+            }
+            this.kolSim=this.arrTab.length;
+            var ss=''
+            for (var i = 0; i < this.arrTab.length; i++) {
+                ss+=i+" "+this.arrTab[i]+" "+this.arrTab2[i]+" "+this.arrS[i]+";"
+            }
+
+            trace(">"+this.idArr+">>",this.doKol,this.arrTab)
+            //trace(ss)
+        }
+
+        this.getKolSim=function(str){ 
+            var kkk=0;
+            var sah=0
+            for (var i = 0; i < str.length; i++) {
+                if(str[i]=="\t"){                   
+                    kkk=4-sah%4;
+                    sah+=kkk
+                    continue                    
+                }else{                 
+                    
+                }
+                sah++;
+                
+            }
+            
+
+            return sah;
+        }
+
+
+        this.dLine=function(){            
+            this.textSpan='<span style="tab-size: 4; '+tdStyle.getSpanColor("s2")+'">';            
+            for (var j = 0; j < this.array.length; j++) {                               
+                if(this.arrBo[j]==0){
+                    this.textSpan+='<span class="s1">'+this.array[j]+'</span>';
+                }else{
+                    if(this.isStrInArr(this.array[j],this.par.textDrag.arr_s2)==true){
+                        this.textSpan+=tdStyle.getSpan("s2")+this.array[j]+'</span>';
+                        continue
+                    }
+                    if(this.isStrInArr(this.array[j],this.par.textDrag.arr_s4)==true){
+                        this.textSpan+=tdStyle.getSpan("s4")+this.array[j]+'</span>';
+                        continue
+                    }
+                    if(this.isStrInArr(this.array[j],this.par.textDrag.arr_s5)==true){
+                        this.textSpan+=tdStyle.getSpan("s5")+this.array[j]+'</span>';
+                        continue
+                    }
+                    this.textSpan+='<span class="s3">'+this.array[j]+'</span>';
+                }
+            }  
+            this.textSpan+='</span>'         
+        }
+
+        this.isStrInArr=function(str,arr){ 
+            for (var i = 0; i < arr.length; i++) {
+                if(arr[i]==str)return true
+            }
+            return false
+        }
+
+        this.getSah=function(_sah){
+            var sah=_sah
+            var si=-1
+            var sk=0
+            for (var i = 0; i < _sah; i++) {
+                if(this.arrTab[i]>=0){
+                    if(this.arrTab[i]==si)sk++
+                    si= this.arrTab[i]   
+                }
+            }
+            sah-=sk
+            return sah;
         }
 
 
@@ -218,26 +325,25 @@ export class MZBTLine{
             this.clear()
             this.active=line.active;
             this.text=line.text;
+            this.doStr=line.doStr;
+            this.doKol=line.doKol;
             for (var i = 0; i < line.array.length; i++) {
                 this.array[i]=line.array[i];
                 this.arrBo[i]=line.arrBo[i];
                 this.arrBo1[i]=line.arrBo1[i];                
             }
+
+            for (var i = 0; i < line.arrTab.length; i++) {
+                this.arrTab[i]=line.arrTab[i];
+                this.arrTab2[i]=line.arrTab2[i];
+                               
+            }
+           
             this.kolSim=line.kolSim;
-
-          /*  line.clear()
-            line.active=true;
-           // 
-            line.text=s;
-            line.array.length=0
-            for (var i = 0; i < this.array.length; i++) {
-                line.array[i]=this.array[i]
-                line.arrBo[i]=this.arrBo[i]
-                line.arrBo1[i]=this.arrBo1[i]
-            }*/
-
-
         }
+
+
+
     }
 
 

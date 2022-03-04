@@ -226,7 +226,7 @@ export  function DTNova(dCont, _x, _y, fun){
     this.y=_y;
     this._width=100;
     this._height=100;
-    this._heightBut=24;  
+    this._heightBut=dcmParam.fontSize+dcmParam._otstup*2;  
 
     this._widthBut=200;  
     this._activMouse = true;
@@ -234,7 +234,7 @@ export  function DTNova(dCont, _x, _y, fun){
 
     this.arr=[];                                   
     this.arrBut=[];                                
-    this.otstup = 2;                               
+    this.otstup = dcmParam._otstup;                               
     this.butOnPanel = 10;                          
     this.butCount=0;                               
     this.butInProc=0;
@@ -857,7 +857,7 @@ function DObjectThree(cont, _x, _y, fun, par){
     this.x=_x;
     this.y=_y;
     this._width= 100;
-    this._height=20;
+    this._height=dcmParam.fontSize;
     this._title='';
     this._color = '#fff000';
 
@@ -891,12 +891,14 @@ function DObjectThree(cont, _x, _y, fun, par){
         this.panel1=new DPanel(this,0,0)
         this.panel1.alpha=0; 
         this.panel.height=this.panel1.height=this._height;
+        
         this.label = new DLabel(this.content,this.x, this.y, this._title);
         this.label.y = (this._height - this.label.height) / 2;
         this.label.div.style.pointerEvents="none";
         this.panel.height=this.panel1.height=this._height;
-        this.panel.width=this._width   
-        this.panel1.width=this._width
+        this.panel.width=this._width;  
+        this.panel1.width=this._width;
+
 
         this.label.width=this._width*2
 
@@ -983,9 +985,9 @@ function DObjectThree(cont, _x, _y, fun, par){
         if(this._height<24){
             let s=Math.round(this._height)-8
             if(s<4)s=4
-            this.label.fontSize=s
+            //this.label.fontSize=s
         }else{
-            this.label.fontSize=16
+            //this.label.fontSize=16
         }       
 
         this.label.y = (this._height - this.rect.height) / 2;

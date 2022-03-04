@@ -169,6 +169,8 @@ export class MShtora  {
     }
 }
 
+
+
 export class MSBlok  {
     constructor(par, fun, tipe, key, id, widthProsent) {         
         this.type="MShtora";

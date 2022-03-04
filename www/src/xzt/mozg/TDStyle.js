@@ -25,11 +25,14 @@ export class TDStyle  {
 
 
         this.arrStyle=[
-            {color:"#67777c",key:"s1"},
-            {color:"#aa8196",key:"s2"},
-            {color:"#c3cbbf",key:"s3"},
-            {color:"#ff0000",key:"s4"},
-            {color:"#00ff00",key:"s5"}
+            {color:"#67777c",key:"s1",title:"коменты"},
+            {color:"#aa8196",key:"s2",title:"итп спец символы"},
+            {color:"#c3cbbf",key:"s3",title:"все что не определены"},
+            {color:"#d65758",key:"s4",title:"красное this undefined true"},
+            {color:"#547caa",key:"s5",title:"function window"},
+
+
+            {color:"#f39c4d",key:"can1",title:"цвет курсора на экране"}
         ]
 
         this.objStyle={}
@@ -37,14 +40,20 @@ export class TDStyle  {
             this.objStyle[this.arrStyle[i].key]=this.arrStyle[i]
         }
 
-
+        this.getSpanColor=function(key){
+            return ' color:'+this.objStyle[key].color+' '
+        }
         this.getSpan=function(key){
             var s='<span style="color:'+this.objStyle[key].color+'">';
-
             return s
         }
-        
+        this.getSpanIn=function(){
+            var s='<span style="padding: 6px 12px">';
+            return s
+        }
 /*
+<span style="padding: 6px 12px">
+<span style="color:#00ff00">
 
 .s1 {
     color: #67777c 
@@ -104,22 +113,7 @@ export class TDStyle  {
        // // window.onload = function() { 
        //      addStyle(styles) 
        // // };
-/*
-       .s1 {
-            color: #67777c //коменты
-        }
-        .s2 {
-            color: #aa8196 // итп спец символы
-        }
-        .s3 {
-            color: #c3cbbf //все что не определены
-        }
-        .s4 {
-            color: #ff0000 //красное this undefined true
-        }
 
-       
-        */
 
     }
 }

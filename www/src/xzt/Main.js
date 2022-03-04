@@ -3,26 +3,36 @@ import { Param } from '../component/Param.js';
 import { MHBDPHP } from '../component/MHBDPHP.js';
 import { Calc } from '../component/Calc.js';
 
+
 import { LocalStorage} from '../component/LocalStorageE6.js';
 import {Languages} from '../component/Languages.js';
-
-
-//import { TLabel } from '../t3d/TStyle.js';
-
 import { TStyle } from '../t3d/TStyle.js';
 
-
-
-
+//xz
+/*sdf			f
+sdfsf	
+*/
 export class Main{
-  	constructor(fun) {  		
-  		this.type="Main";  		  		
-        var self=this;
-		this.contentHTML= document.createElement('div');// dsdsg dsfg dsg sdgf dsgffg sdgfdsfg sdgf sdfg sdgf sdfg sdgf
-		this.contentHTML.style.position = 'fixed';
+ constructor(fun) {
+	this.type="Main";	//4444 	 	
+ 	this.type="Main";	//0333 	
+  	this.type="Main";	//0022
+   	this.type="Main";	//0001 
+	var f="555		55555555555555555555555555550123456789_012345655555555555555555555555555550123456789_012345655555555555555555555555555550123456789_012345655555555555555555555555555550123456789_012345655555555555555555555555555550123456789_0123456789_0123456789_";  	
+
+  	var f="111111111111111111111111111111111111111111111111111111111111111111";  
+  	var a=[
+  			"s"
+  	]
+
+    var self=this;
+  	this.contentHTML= document.createElement(
+			'div'
+		);// dsds
+	 	this.contentHTML.style.position = 'fixed';
 		this.contentHTML.style.top = '0px';			
 		this.contentHTML.style.left = '0px';
-		document.body.appendChild(this.contentHTML);  
+	document.body.appendChild(this.contentHTML);  
 
 		//создание сцены
   		this.start = function () {	   
@@ -30,15 +40,14 @@ export class Main{
 			t.minFPS = 50;
 			t.add(this.tick, this);
 			t.start();
-        	dcmParam.fontFamily = "Montserrat";
-        	dcmParam.fontSize = this.param.fontSize;    
+        	   
         	this.fina()
 		};
 
 
 		this.fina = function () { 			
 			self.glaf=new Glaf(this);
-		    fun("init");         	
+		 	fun("init");         	
         }
 
 
@@ -58,12 +67,13 @@ export class Main{
   		this.sizeWindow = function(w,h){  			
   			self._width=w;
 			self._height=h;
-			if (self._width < 400) self._width = 400;
-			if (self._height < 400) self._height = 400;
+			if (self._width < 100) self._width = 100;
+			if (self._height < 100) self._height = 100;
 			s= w/self._width;
 			if(s>h/self._height)s=h/self._height;
 			this.scale = s;
-			if(dcmParam.isIE==true)this.scale = 1;			
+			//if(dcmParam.isIE==true)
+				this.scale = 1;			
 			
   			if (self.glaf) { 
   				self.glaf.sizeWindow(w, h, this.scale)
@@ -80,15 +90,17 @@ export class Main{
 
   		this.param.wh=32;;
   		this.param.fontSize=12;
-
+  		//dcmParam.zbrosDokument=true
   		dcmParam.fontSize=this.param.fontSize
   		dcmParam.color="#777777";
   		dcmParam.color1="#303841"
-
-
+  		dcmParam.color2="#ffffff"
+  		dcmParam.fontFamily = "PT Mono"
+  		//dcmParam.fontFamily = "Montserrat";
+        	 
   		//this.param.colorFont="#303841"
 
-  		window.tStyle=new TStyle();
+  		window.tStyle= new TStyle();
   		document.body.style.backgroundColor = "#303841"
   		window.tStyle._gage=0.1
 
@@ -96,7 +108,8 @@ export class Main{
 		window.mhbd.load(
 			function(){
 				var loader = new THREE.FontLoader();
-				loader.load( 'resources/font/helvetiker_bold.typeface.json', function ( font ) {
+				loader.load( 'resources/font/helvetiker_bold.typeface.json', 
+					function ( font ) {
 					tStyle._fontSize=self.param.fontSizeLittel 
 
 					tStyle.addFont(font);
